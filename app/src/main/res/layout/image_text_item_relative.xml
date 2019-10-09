@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--image: file image-->
+    <ImageView
+        android:id="@+id/image_file"
+        android:layout_width="42.67dp"
+        android:layout_height="42.67dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="6.00dp"
+        android:layout_marginTop="5.67dp"
+        android:layout_marginEnd="7.67dp"
+        android:layout_marginBottom="5.67dp"
+        android:src="@drawable/home_ico_file_xls" />
+
+    <!--textView: file name-->
+    <TextView
+        android:id="@+id/tv_file_name"
+        android:layout_width="match_parent"
+        android:layout_height="25.67dp"
+        android:layout_marginTop="5.67dp"
+        android:layout_toStartOf="@+id/image_favor"
+        android:layout_toEndOf="@+id/image_file"
+        android:background="#E0FFFF"
+        android:gravity="center_vertical"
+        android:textColor="#282828"
+        android:textSize="16sp"
+        tools:text="@string/file_name" />
+
+    <!--layout: file date & size-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="17.00dp"
+        android:layout_below="@+id/tv_file_name"
+        android:layout_marginBottom="5.67dp"
+        android:layout_toStartOf="@+id/image_favor"
+        android:layout_toEndOf="@+id/image_file"
+        android:background="#FFFACD">
+
+        <!--textView: file date-->
+        <TextView
+            android:id="@+id/tv_file_date"
+            android:layout_width="wrap_content"
+            android:layout_height="17.00dp"
+            android:layout_marginEnd="8.67dp"
+            android:gravity="center_vertical"
+            android:textColor="#53a7f6"
+            android:textSize="12sp"
+            tools:text="@string/file_date" />
+
+        <!--textView: file size-->
+        <TextView
+            android:id="@+id/tv_file_size"
+            android:layout_width="wrap_content"
+            android:layout_height="17.00dp"
+            android:layout_toEndOf="@+id/tv_file_date"
+            android:gravity="center_vertical"
+            android:textColor="#53a7f6"
+            android:textSize="12sp"
+            tools:text="@string/file_size" />
+
+    </RelativeLayout>
+
+    <!--image: file favorite-->
+    <ImageView
+        android:id="@+id/image_favor"
+        android:layout_width="48.00dp"
+        android:layout_height="54.00dp"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/home_ico_favorite_n" />
+
+</RelativeLayout>
