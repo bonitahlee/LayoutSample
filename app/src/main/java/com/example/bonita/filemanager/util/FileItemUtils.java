@@ -91,8 +91,8 @@ public class FileItemUtils {
                 return R.drawable.ico_file_docx;
             default:
                 if (bDir) {
-                    if (sFileName.equals(FileManagerDefine.UPPER)) {
-                        // 상위 폴더 이동인 경우
+                    if (sFileName.equals(FileManagerDefine.UPPER_FOLDER)) {
+                        // 상위 폴더 이동("..")인 경우
                         return R.drawable.ico_file_folder_upper;
                     } else {
                         // 그냥 폴더일 경우
@@ -108,8 +108,9 @@ public class FileItemUtils {
     /**
      * 문서 type 별 mime type 가져오기
      */
-    public static String getMimeType(String path) {
+    static String getMimeType(String path) {
         String sExt = getFileExtension(path).toLowerCase();
+
         if (FileManagerDefine.EXT_TEXT.contains(sExt)) {
             return "text/*";
         } else if (FileManagerDefine.EXT_DOC.contains(sExt)) {

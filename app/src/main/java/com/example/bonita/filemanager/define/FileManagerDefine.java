@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class FileManagerDefine {
     public static final String PATH_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath();
-    public static final String UPPER = "..";
+    public static final String UPPER_FOLDER = "..";
 
     public static final List<String> EXT_TEXT = Arrays.asList("txt");
     public static final List<String> EXT_DOC = Arrays.asList("doc", "docx");

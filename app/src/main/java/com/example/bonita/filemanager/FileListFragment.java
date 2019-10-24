@@ -13,14 +13,18 @@ import com.example.bonita.filemanager.util.FileFunction;
 import com.example.bonita.filemanager.widget.FileArrayAdapter;
 import com.example.bonita.filemanager.widget.FileItem;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 파일들을 보여주는 ListView
+ * 파일들을 보여주는 ListView Fragment
  */
 public class FileListFragment extends ListFragment {
     private FileFunction mFileFunction;
+    private FileArrayAdapter mFileAdapter;
+
+    private List<FileItem> mItemList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,16 +47,17 @@ public class FileListFragment extends ListFragment {
      * adapter 구성
      */
     private void initAdapter() {
-        List<FileItem> items = new ArrayList<>();
-        FileArrayAdapter adapter = new FileArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, items);
-        setListAdapter(adapter);
-        // noti는 누가 해줘야 하는지, adapter를 생성하고 setlistadapter하면안됨
-        mFileFunction.setAdapter(adapter);
-        mFileFunction.refreshList(FileManagerDefine.PATH_ROOT);
+        mItemList = new ArrayList<>();
+        mFileAdapter = new FileArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, mItemList);
+        setListAdapter(mFileAdapter);
+        ////// TODO: 2019-10-24 noti는 누가 해줘야 하는지, adapter를 생성하고 setlistadapter하면안됨?? ListView와 Adapter의 역할을 잘 알아야혀
+        if (mFileFunction.openFolder(mItemList, FileManagerDefine.PATH_ROOT)) {
+            updateList();
+        }
     }
 
     /**
-     * ListView의 항목을 선택했을 경우 키 처리
+     * ListView 의 항목을 선택했을 경우 키 처리
      */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -60,19 +65,38 @@ public class FileListFragment extends ListFragment {
         String filePath = item.getFilePath();
 
         if (item.isDir()) {
-            // 폴더일 경우
-            if (item.getFileName().equals(FileManagerDefine.UPPER)) {
-                // 상위 폴더 진입
-                mFileFunction.moveParent();
-            } else {
-                // 하위 폴더 진입
-                mFileFunction.refreshList(filePath);
+            if (item.getFileName().equals(FileManagerDefine.UPPER_FOLDER)) {
+                // 상위
+                filePath = new File(mFileFunction.getCurrentPath()).getParentFile().getParentFile().getAbsolutePath();
             }
+            // 상위/하위 폴더로 진입
+            openFolder(filePath);
         } else {
-            // 파일 실행
+            // 파일 열기
             mFileFunction.openFile(this, filePath);
         }
 
         super.onListItemClick(l, v, position, id);
+    }
+
+    /**
+     * 상위/하위 폴더 진입
+     *
+     *  @param filePath
+     */
+    private void openFolder(String filePath) {
+        if (mFileFunction.openFolder(mItemList, filePath)) {
+            // mItemList가 변경되었을 때에만 list update 하도록
+            updateList();
+        }
+    }
+
+    /**
+     * ListView 갱신
+     **/
+    private void updateList() {
+        ////// TODO: 2019-10-24 콜백처리 해야함. UI에서 listView Item 넣는 작업을 하면 ANR이 걸릴수도 있음??
+        mFileAdapter.setItemList(mItemList);
+        mFileAdapter.notifyDataSetChanged();
     }
 }

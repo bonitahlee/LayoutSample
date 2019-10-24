@@ -6,7 +6,6 @@ import android.net.Uri;
 
 import com.example.bonita.filemanager.FileListFragment;
 import com.example.bonita.filemanager.define.FileManagerDefine;
-import com.example.bonita.filemanager.widget.FileArrayAdapter;
 import com.example.bonita.filemanager.widget.FileItem;
 
 import java.io.File;
@@ -17,52 +16,24 @@ import java.util.List;
  * File operator 관련 class (파일 열기, 폴더 상/하위 이동 등..)
  */
 public class FileFunction {
-
     private String mCurrentPath;      // 현재 파일의 경로
-    private FileArrayAdapter mAdapter;
 
     /**
-     * 폴더의 하위 목록을 갖고와서 ListView에 뿌려줌
+     * 상위/하위 폴더로 진입
      *
-     * @param path 폴더 경로
-     */
-    public void refreshList(String path) {
-        List<FileItem> fileList = new ArrayList<>();
-        File directory = new File(path);   // 폴더 경로
-        if (directory.isDirectory() && !directory.exists()) {
-            // 20191009. directory가 존재하지 않을 때에는 폴더를 만들어 줘야함
-            directory.mkdirs();
-        }
-
-        File[] files = directory.listFiles();
-        if (files == null || files.length == 0) {
-            // 20191009. directory 내의 파일이 존재하지 않을 때에는 빈 list를 보여줘야함
-            updateList(fileList, directory.getAbsolutePath() + "/" + FileManagerDefine.UPPER);
-            return;
-        }
-
-        for (File file : files) {
-            fileList.add(new FileItem(
-                    file.getAbsolutePath(),
-                    file.lastModified(),
-                    file.length(),
-                    file.isDirectory()));
-        }
-
-        updateList(fileList, fileList.get(0).getFilePath());
-    }
-
-    /**
-     * 상위 폴더로 이동
-     *
+     * @param itemList
+     * @param path
      * @return true: 이동함
      */
-    public void moveParent() {
-        File parent = new File(mCurrentPath).getParentFile().getParentFile();
-        if (isExist(parent)) {
-            // 상위 폴더가 존재하면 이동
-            refreshList(parent.getAbsolutePath());
+    public boolean openFolder(List<FileItem> itemList, String path) {
+        if (!isExist(new File(path))) {
+            // 이동하려는 폴더(상위 폴더로 이동일 때) 또는 현재 폴더(하위 폴더로 이동일 때)가 존재할 때에만 이동
+            return false;
         }
+
+        itemList.clear();
+        itemList.addAll(getFileList(path));
+        return true;
     }
 
     /**
@@ -77,7 +48,7 @@ public class FileFunction {
         try {
             fragment.startActivity(sendIntent);
         } catch (ActivityNotFoundException e) {
-            // emulator에 실행할 app이 깔려있지 않다면 모든타입("*/*")으로 바꿔서 보내도록 exception 처리
+            // emulator에 실행할 app이 설치되어 있지 않다면 모든타입("*/*")으로 바꿔서 보내도록 exception 처리
             e.printStackTrace();
             sendIntent.setDataAndType(Uri.fromFile(new File(path)), "*/*");
             fragment.startActivity(sendIntent);
@@ -85,23 +56,60 @@ public class FileFunction {
     }
 
     /**
-     * 화면 갱신
+     * 매개변수로 전달된 폴더경로의 하위 목록을 갖고옴
      *
-     * @param fileList 갱신할 항목 list
-     * @param path     현재 폴더/파일 경로
+     * @param path 폴더 경로
      */
-    private void updateList(List<FileItem> fileList, String path) {
-        File parent = new File(path).getParentFile().getParentFile();
+    private List<FileItem> getFileList(String path) {
+        File directory = new File(path);   // 폴더 경로
+
+        if (!directory.exists() && directory.isDirectory() && !directory.exists()) {
+            // 20191009. directory가 존재하지 않을 때에는 폴더를 만들어 줘야함
+            directory.mkdirs();
+        }
+
+        File[] files = directory.listFiles();
+        if (files == null || files.length == 0) {
+            // 20191009. directory 내의 파일이 존재하지 않을 때에는 빈 list를 보여줘야함
+            files = new File[]{};
+        }
+
+        return addFileItemList(path, files);
+    }
+
+    /**
+     * FileItem List에 항목을 추가하여 반환
+     *
+     * @param path  하위 항목을 가져올 경로
+     * @param files path 폴더의 하위항목들
+     * @return path폴더의 하위 항목(폴더/파일들)
+     */
+    private List<FileItem> addFileItemList(String path, File[] files) {
+        List<FileItem> fileList = new ArrayList<>();
+        for (File file : files) {
+            fileList.add(new FileItem(
+                    file.getAbsolutePath(),
+                    file.lastModified(),
+                    file.length(),
+                    file.isDirectory()));
+        }
+
+        if (fileList.isEmpty()) {
+            mCurrentPath = path + "/" + FileManagerDefine.UPPER_FOLDER;
+        } else {
+            mCurrentPath = fileList.get(0).getFilePath();
+        }
+
+        File parent = new File(mCurrentPath).getParentFile().getParentFile();
         if (isExist(parent)) {
-            // 상위 경로가 존재할 때에는 ... 추가
+            // 상위 경로가 존재할 때에는 .. 추가
             fileList.add(0, new FileItem(
-                    parent.getAbsolutePath() + "/" + FileManagerDefine.UPPER,
+                    parent.getAbsolutePath() + "/" + FileManagerDefine.UPPER_FOLDER,
                     0,
                     0,
                     true));
         }
-        mAdapter.setItemList(fileList);
-        mCurrentPath = path;
+        return fileList;
     }
 
     /**
@@ -114,11 +122,11 @@ public class FileFunction {
         return file != null && file.exists() && !file.getAbsolutePath().equals("/");
     }
 
-    /**
-     * set adapter
-     */
-    public void setAdapter(FileArrayAdapter adapter) {
-        mAdapter = adapter;
+    public String getCurrentPath() {
+        return mCurrentPath;
     }
 
+    public void setCurrentPath(String mCurrentPath) {
+        this.mCurrentPath = mCurrentPath;
+    }
 }
