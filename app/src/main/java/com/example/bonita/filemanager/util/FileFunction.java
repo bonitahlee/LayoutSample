@@ -8,6 +8,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * File operator 관련 class
+ */
 public class FileFunction {
 
     private String mCurrentPath;

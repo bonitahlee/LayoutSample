@@ -8,5 +8,5 @@ import android.os.Environment;
 public class FileManagerDefine {
     public static final String PATH_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String PATH_DOCUMENTS = PATH_ROOT + "/documents/";
-    public static final String UPPER = "...";
+    public static final String UPPER = "..";
 }

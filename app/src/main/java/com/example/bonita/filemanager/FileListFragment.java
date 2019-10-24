@@ -1,6 +1,7 @@
 package com.example.bonita.filemanager;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -17,16 +18,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * /sdcard/documents 폴더의 파일들을 보여주는 ListView
+ * 파일들을 보여주는 ListView
  */
 public class FileListFragment extends ListFragment {
     private FileFunction mFunction;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mFunction = new FileFunction();
-        initAdapter();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.file_list_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initAdapter();
     }
 
     /**
@@ -36,6 +47,7 @@ public class FileListFragment extends ListFragment {
         List<FileItem> items = new ArrayList<>();
         FileArrayAdapter adapter = new FileArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, items);
         setListAdapter(adapter);
+        // noti는 누가 해줘야 하는지, adapter를 생성하고 setlistadapter하면안됨
         mFunction.setAdapter(adapter);
         mFunction.refreshList(FileManagerDefine.PATH_DOCUMENTS);
     }
@@ -46,9 +58,9 @@ public class FileListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         FileItem item = (FileItem) l.getItemAtPosition(position);
-        boolean bDir = item.isDir();
 
-        if (bDir) {
+        if (item.isDir()) {
+            // 폴더일 경우
             if (item.getFileName().equals(FileManagerDefine.UPPER)) {
                 // 상위 폴더 진입
                 mFunction.moveParent();

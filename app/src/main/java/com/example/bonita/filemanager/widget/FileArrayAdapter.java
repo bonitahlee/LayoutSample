@@ -61,7 +61,7 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
         });
 
         // textView imageView 구성
-        setView(viewHolder, position);
+        setViewHolder(viewHolder, position);
         return convertView;
     }
 
@@ -92,7 +92,7 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
     /**
      * 파일이름, 파일날짜, 파일크기, 파일 image 를 설정
      */
-    private void setView(ViewHolder viewHolder, int position) {
+    private void setViewHolder(ViewHolder viewHolder, int position) {
         viewHolder.fileNameTv.setText(mItemList.get(position).getFileName());
         viewHolder.fileDateTv.setText(mItemList.get(position).getFileDate());
         viewHolder.fileSizeTv.setText(mItemList.get(position).getFileSize());
