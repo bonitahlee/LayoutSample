@@ -3,7 +3,6 @@ package com.example.bonita.filemanager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +20,12 @@ import java.util.List;
  * 파일들을 보여주는 ListView
  */
 public class FileListFragment extends ListFragment {
-    private FileFunction mFunction;
+    private FileFunction mFileFunction;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFunction = new FileFunction();
+        mFileFunction = new FileFunction();
     }
 
     @Override
@@ -48,8 +47,8 @@ public class FileListFragment extends ListFragment {
         FileArrayAdapter adapter = new FileArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, items);
         setListAdapter(adapter);
         // noti는 누가 해줘야 하는지, adapter를 생성하고 setlistadapter하면안됨
-        mFunction.setAdapter(adapter);
-        mFunction.refreshList(FileManagerDefine.PATH_DOCUMENTS);
+        mFileFunction.setAdapter(adapter);
+        mFileFunction.refreshList(FileManagerDefine.PATH_ROOT);
     }
 
     /**
@@ -58,31 +57,22 @@ public class FileListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         FileItem item = (FileItem) l.getItemAtPosition(position);
+        String filePath = item.getFilePath();
 
         if (item.isDir()) {
             // 폴더일 경우
             if (item.getFileName().equals(FileManagerDefine.UPPER)) {
                 // 상위 폴더 진입
-                mFunction.moveParent();
+                mFileFunction.moveParent();
             } else {
-                //폴더 진입
-                mFunction.refreshList(item.getFilePath());
+                // 하위 폴더 진입
+                mFileFunction.refreshList(filePath);
             }
+        } else {
+            // 파일 실행
+            mFileFunction.openFile(this, filePath);
         }
 
         super.onListItemClick(l, v, position, id);
-    }
-
-    /**
-     * ListView 클릭 외의 키 처리
-     */
-    public boolean onKeyUp(int keyCode) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // 상위 폴더로 이동 또는 앱 종료
-            if (mFunction.moveParent()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

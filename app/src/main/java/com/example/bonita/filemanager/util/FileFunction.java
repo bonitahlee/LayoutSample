@@ -1,5 +1,10 @@
 package com.example.bonita.filemanager.util;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
+
+import com.example.bonita.filemanager.FileListFragment;
 import com.example.bonita.filemanager.define.FileManagerDefine;
 import com.example.bonita.filemanager.widget.FileArrayAdapter;
 import com.example.bonita.filemanager.widget.FileItem;
@@ -9,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * File operator 관련 class
+ * File operator 관련 class (파일 열기, 폴더 상/하위 이동 등..)
  */
 public class FileFunction {
 
-    private String mCurrentPath;
+    private String mCurrentPath;      // 현재 파일의 경로
     private FileArrayAdapter mAdapter;
 
     /**
@@ -52,14 +57,31 @@ public class FileFunction {
      *
      * @return true: 이동함
      */
-    public boolean moveParent() {
+    public void moveParent() {
         File parent = new File(mCurrentPath).getParentFile().getParentFile();
         if (isExist(parent)) {
             // 상위 폴더가 존재하면 이동
             refreshList(parent.getAbsolutePath());
-            return true;
         }
-        return false;
+    }
+
+    /**
+     * 파일 열기
+     */
+    public void openFile(FileListFragment fragment, String path) {
+        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+        sendIntent.setDataAndType(
+                Uri.fromFile(new File(path)),
+                FileItemUtils.getMimeType(path));
+
+        try {
+            fragment.startActivity(sendIntent);
+        } catch (ActivityNotFoundException e) {
+            // emulator에 실행할 app이 깔려있지 않다면 모든타입("*/*")으로 바꿔서 보내도록 exception 처리
+            e.printStackTrace();
+            sendIntent.setDataAndType(Uri.fromFile(new File(path)), "*/*");
+            fragment.startActivity(sendIntent);
+        }
     }
 
     /**
@@ -93,7 +115,7 @@ public class FileFunction {
     }
 
     /**
-     * setting adapter
+     * set adapter
      */
     public void setAdapter(FileArrayAdapter adapter) {
         mAdapter = adapter;

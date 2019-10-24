@@ -27,7 +27,7 @@ public class FileItemUtils {
      * @param name file.getName()
      * @return <ex> txt, doccx, xls...
      */
-    private static String getFileExtension(String name) {
+    public static String getFileExtension(String name) {
         return name.substring(name.lastIndexOf(".") + 1);
 
     }
@@ -102,6 +102,32 @@ public class FileItemUtils {
                     // 그 외 파일일 경우
                     return R.drawable.ico_file_unknown;
                 }
+        }
+    }
+
+    /**
+     * 문서 type 별 mime type 가져오기
+     */
+    public static String getMimeType(String path) {
+        String sExt = getFileExtension(path).toLowerCase();
+        if (FileManagerDefine.EXT_TEXT.contains(sExt)) {
+            return "text/*";
+        } else if (FileManagerDefine.EXT_DOC.contains(sExt)) {
+            return "application/msword";
+        } else if (FileManagerDefine.EXT_PPT.contains(sExt)) {
+            return "application/vnd.ms-powerpoint";
+        } else if (FileManagerDefine.EXT_EXCEL.contains(sExt)) {
+            return "application/vnd.ms-excel";
+        } else if (FileManagerDefine.EXT_PDF.contains(sExt)) {
+            return "application/pdf";
+        } else if (FileManagerDefine.EXT_IMAGE.contains(sExt)) {
+            return "image/*";
+        } else if (FileManagerDefine.EXT_MUSIC.contains(sExt)) {
+            return "audio/*";
+        } else if (FileManagerDefine.EXT_VIDEO.contains(sExt)) {
+            return "video/*";
+        } else {
+            return "*/*";
         }
     }
 }
