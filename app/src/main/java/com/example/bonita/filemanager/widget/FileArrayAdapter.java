@@ -78,7 +78,7 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
             // 상위 폴더 이동 (...)에는 file date, file size를 안보이도록
             convertView.findViewById(R.id.layout_file_date_size).setVisibility(View.GONE);
             // height를 -1(match parent)로 임의 지정....?
-            convertView.findViewById(R.id.tv_file_name).getLayoutParams().height = -1;
+            //convertView.findViewById(R.id.tv_file_name).getLayoutParams().height = -1;
         } else if (item.isDir()) {
             // 폴더일 경우에는 file size만 안보이도록
             convertView.findViewById(R.id.layout_file_date_size).setVisibility(View.VISIBLE);
