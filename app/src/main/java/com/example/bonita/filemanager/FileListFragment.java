@@ -4,12 +4,13 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
 import com.example.bonita.filemanager.event.FileEvent;
@@ -21,10 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 파일들을 보여주는 ListView Fragment
+ * 파일들의 ListView을 보여주는 Fragment
  */
-public class FileListFragment extends ListFragment {
+public class FileListFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();   // "FilListFragment"
+
+    private RecyclerView mRecyclerView;
+    private FileArrayAdapter mFileAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     private FileFunction mFileFunction;
     private List<FileItem> mItemList;
@@ -43,36 +48,43 @@ public class FileListFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initAdapter();
+        initListView(view);
     }
 
     /**
-     * adapter 구성
+     * ListView 구성
      */
-    private void initAdapter() {
+    private void initListView(View view) {
         mItemList = new ArrayList<>();
-        FileArrayAdapter adapter = new FileArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, mItemList);
-        setListAdapter(adapter);
+        mRecyclerView = view.findViewById(R.id.file_list);
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter
+        mFileAdapter = new FileArrayAdapter(mItemList);
+        mRecyclerView.setAdapter(mFileAdapter);
+
+        // ListView 의 항목을 선택했을 경우 키 처리
+        mRecyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //FileItem item = (FileItem) adapterView.getItemAtPosition(i);
+                FileItem item = mItemList.get(0);
+                String filePath = item.getFilePath();
+
+                if (item.isDir()) {
+                    // 상위/하위 폴더로 진입
+                    openFolder(filePath);
+                } else {
+                    // 파일 열기
+                    mFileFunction.openFile(FileListFragment.this, filePath);
+                }
+            }
+        });
         openFolder(FileManagerDefine.PATH_ROOT);
-    }
-
-    /**
-     * ListView 의 항목을 선택했을 경우 키 처리
-     */
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        FileItem item = (FileItem) l.getItemAtPosition(position);
-        String filePath = item.getFilePath();
-
-        if (item.isDir()) {
-            // 상위/하위 폴더로 진입
-            openFolder(filePath);
-        } else {
-            // 파일 열기
-            mFileFunction.openFile(this, filePath);
-        }
-
-        super.onListItemClick(l, v, position, id);
     }
 
     /**
@@ -126,9 +138,8 @@ public class FileListFragment extends ListFragment {
          * ListView 갱신
          **/
         private void updateList() {
-            FileArrayAdapter adapter = (FileArrayAdapter) getListAdapter();
-            adapter.setItemList(mItemList);
-            adapter.notifyDataSetChanged();
+            mFileAdapter.setItemList(mItemList);
+            mFileAdapter.notifyDataSetChanged();
         }
     }
 }

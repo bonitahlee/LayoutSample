@@ -20,7 +20,6 @@
     <!--질문. width match parent ? 화면에 꽉차... -> weight를 주었음-->
     <!--layout: file name & date & size-->
     <LinearLayout
-        android:id="@+id/layout_text"
         android:layout_width="0dp"
         android:layout_height="42.67dp"
         android:layout_marginTop="5.67dp"

@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 /**
  * 파일에 관한 정보를 지정된 형식으로 변환하여 주는 class
  */
-public class FileItemUtils {
+public class FileUtils {
 
     /**
      * 파일 확장자 반환
@@ -34,7 +34,6 @@ public class FileItemUtils {
 
     /**
      * 파일 크기 + 단위 붙여서 반환
-     * ////// TODO: 2019-10-10  다른 예시 찾기!
      *
      * @param size file.length()
      */
@@ -47,14 +46,17 @@ public class FileItemUtils {
         float sizeTerra = sizeGb * sizeKb;
 
 
-        if (size < sizeMb)
+        if (size < sizeMb) {
             return df.format(size / sizeKb) + " KB";
-        else if (size < sizeGb)
+        } else if (size < sizeGb) {
             return df.format(size / sizeMb) + " MB";
-        else if (size < sizeTerra)
+        } else if (size < sizeTerra) {
             return df.format(size / sizeGb) + " GB";
-
-        return "";
+        } else if (size >= sizeTerra) {
+            return df.format(size / sizeTerra) + " TB";
+        } else {
+            return "";
+        }
     }
 
     /**

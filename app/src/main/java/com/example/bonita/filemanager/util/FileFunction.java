@@ -42,7 +42,7 @@ public class FileFunction {
         Intent sendIntent = new Intent(Intent.ACTION_VIEW);
         sendIntent.setDataAndType(
                 Uri.fromFile(new File(path)),
-                FileItemUtils.getMimeType(path));
+                FileUtils.getMimeType(path));
 
         try {
             fragment.startActivity(sendIntent);
