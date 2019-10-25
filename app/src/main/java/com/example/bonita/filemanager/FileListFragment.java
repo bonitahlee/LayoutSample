@@ -1,14 +1,18 @@
 package com.example.bonita.filemanager;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
+import com.example.bonita.filemanager.event.FileEvent;
 import com.example.bonita.filemanager.util.FileFunction;
 import com.example.bonita.filemanager.widget.FileArrayAdapter;
 import com.example.bonita.filemanager.widget.FileItem;
@@ -21,6 +25,8 @@ import java.util.List;
  * 파일들을 보여주는 ListView Fragment
  */
 public class FileListFragment extends ListFragment {
+    private final String TAG = this.getClass().getSimpleName();   // "FilListFragment"
+
     private FileFunction mFileFunction;
     private FileArrayAdapter mFileAdapter;
 
@@ -50,10 +56,7 @@ public class FileListFragment extends ListFragment {
         mItemList = new ArrayList<>();
         mFileAdapter = new FileArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, mItemList);
         setListAdapter(mFileAdapter);
-        ////// TODO: 2019-10-24 noti는 누가 해줘야 하는지, adapter를 생성하고 setlistadapter하면안됨?? ListView와 Adapter의 역할을 잘 알아야혀
-        if (mFileFunction.openFolder(mItemList, FileManagerDefine.PATH_ROOT)) {
-            updateList();
-        }
+        openFolder(FileManagerDefine.PATH_ROOT);
     }
 
     /**
@@ -82,21 +85,56 @@ public class FileListFragment extends ListFragment {
     /**
      * 상위/하위 폴더 진입
      *
-     *  @param filePath
+     * @param filePath
      */
     private void openFolder(String filePath) {
-        if (mFileFunction.openFolder(mItemList, filePath)) {
-            // mItemList가 변경되었을 때에만 list update 하도록
-            updateList();
-        }
+        Object[] objects = new Object[]{FileEvent.OPEN_FOLDER, filePath};
+        new FolderTask().execute(objects);
     }
 
     /**
      * ListView 갱신
      **/
     private void updateList() {
-        ////// TODO: 2019-10-24 콜백처리 해야함. UI에서 listView Item 넣는 작업을 하면 ANR이 걸릴수도 있음??
         mFileAdapter.setItemList(mItemList);
         mFileAdapter.notifyDataSetChanged();
+    }
+
+    class FolderTask extends AsyncTask<Object, Void, Boolean> {
+        private ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.e(TAG, "pre");
+            dialog = new ProgressDialog(FileListFragment.this.getActivity());
+            dialog.setMessage("Loading...");
+            dialog.setIndeterminate(true);
+            dialog.setCancelable(true);
+            dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Object... params) {
+            Log.e(TAG, "doin");
+            switch ((int) params[0]) {
+                // 폴더 열기
+                case FileEvent.OPEN_FOLDER:
+                    return mFileFunction.openFolder(mItemList, (String) params[1]);
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            Log.e(TAG, "post");
+            dialog.dismiss();
+            if (result) {
+                // mItemList가 변경되었을 때에만 list update 하도록
+                updateList();
+            }
+        }
     }
 }

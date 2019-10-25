@@ -63,7 +63,7 @@ public class FileFunction {
     private List<FileItem> getFileList(String path) {
         File directory = new File(path);   // 폴더 경로
 
-        if (!directory.exists() && directory.isDirectory() && !directory.exists()) {
+        if (!directory.exists() && directory.isDirectory()) {
             // 20191009. directory가 존재하지 않을 때에는 폴더를 만들어 줘야함
             directory.mkdirs();
         }

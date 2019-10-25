@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '26.0.3'
     defaultConfig {
         applicationId "com.example.bonita.filemanager"
         minSdkVersion 22
