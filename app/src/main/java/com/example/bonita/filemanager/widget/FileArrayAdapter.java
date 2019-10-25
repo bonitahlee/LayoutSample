@@ -39,20 +39,20 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
             LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.image_text_item, null);
             viewHolder = new ViewHolder();
-            viewHolder.fileNameTv = (TextView) convertView.findViewById(R.id.tv_file_name);
-            viewHolder.fileDateTv = (TextView) convertView.findViewById(R.id.tv_file_date);
-            viewHolder.fileSizeTv = (TextView) convertView.findViewById(R.id.tv_file_size);
-            viewHolder.imageView = (ImageView) convertView.findViewById(R.id.image_file);
+            viewHolder.fileNameTv = convertView.findViewById(R.id.tv_file_name);
+            viewHolder.fileDateTv = convertView.findViewById(R.id.tv_file_date);
+            viewHolder.fileSizeTv = convertView.findViewById(R.id.tv_file_size);
+            viewHolder.imageView = convertView.findViewById(R.id.image_file);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        // set [file date, file size] visibility
-        setVisibilityFileDateSize(convertView, position);
+        // set [file date, file size, image favor] visibility
+        setViewVisibility(convertView, position);
 
         // image view selector 구현. 여기다 하는게 맞나용?
-        ImageView image_favorite = (ImageView) convertView.findViewById(R.id.image_favor);
+        ImageView image_favorite = convertView.findViewById(R.id.image_favor);
         image_favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,9 +66,9 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
     }
 
     /**
-     * 경우에 따라 파일 날짜, 파일 사이즈를 보이거나 숨기도록 설정
+     * 경우에 따라 [파일 날짜, 파일 사이즈, 즐겨찾기 이미지]를 보이거나 숨기도록 설정
      */
-    private void setVisibilityFileDateSize(View convertView, int position) {
+    private void setViewVisibility(View convertView, int position) {
         FileItem item = getItem(position);
         if (item == null) {
             return;
@@ -77,16 +77,19 @@ public class FileArrayAdapter extends ArrayAdapter<FileItem> {
         if (item.getFileName().equals(FileManagerDefine.UPPER_FOLDER)) {
             // 상위 폴더 이동 (..)에는 file date, file size를 안보이도록
             convertView.findViewById(R.id.layout_file_date_size).setVisibility(View.GONE);
+            convertView.findViewById(R.id.image_favor).setVisibility(View.GONE);
             // height를 -1(match parent)로 임의 지정....?
             //convertView.findViewById(R.id.tv_file_name).getLayoutParams().height = -1;
         } else if (item.isDir()) {
             // 폴더일 경우에는 file size 만 안보이도록
             convertView.findViewById(R.id.layout_file_date_size).setVisibility(View.VISIBLE);
             convertView.findViewById(R.id.tv_file_size).setVisibility(View.GONE);
+            convertView.findViewById(R.id.image_favor).setVisibility(View.VISIBLE);
         } else {
             // 그 외의 경우에는 다보이도록
             convertView.findViewById(R.id.layout_file_date_size).setVisibility(View.VISIBLE);
             convertView.findViewById(R.id.tv_file_size).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.image_favor).setVisibility(View.VISIBLE);
         }
     }
 

@@ -17,7 +17,6 @@ import com.example.bonita.filemanager.util.FileFunction;
 import com.example.bonita.filemanager.widget.FileArrayAdapter;
 import com.example.bonita.filemanager.widget.FileItem;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +27,6 @@ public class FileListFragment extends ListFragment {
     private final String TAG = this.getClass().getSimpleName();   // "FilListFragment"
 
     private FileFunction mFileFunction;
-    private FileArrayAdapter mFileAdapter;
-
     private List<FileItem> mItemList;
 
     @Override
@@ -54,8 +51,8 @@ public class FileListFragment extends ListFragment {
      */
     private void initAdapter() {
         mItemList = new ArrayList<>();
-        mFileAdapter = new FileArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, mItemList);
-        setListAdapter(mFileAdapter);
+        FileArrayAdapter adapter = new FileArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, mItemList);
+        setListAdapter(adapter);
         openFolder(FileManagerDefine.PATH_ROOT);
     }
 
@@ -68,10 +65,6 @@ public class FileListFragment extends ListFragment {
         String filePath = item.getFilePath();
 
         if (item.isDir()) {
-            if (item.getFileName().equals(FileManagerDefine.UPPER_FOLDER)) {
-                // 상위
-                filePath = new File(mFileFunction.getCurrentPath()).getParentFile().getParentFile().getAbsolutePath();
-            }
             // 상위/하위 폴더로 진입
             openFolder(filePath);
         } else {
@@ -90,14 +83,6 @@ public class FileListFragment extends ListFragment {
     private void openFolder(String filePath) {
         Object[] objects = new Object[]{FileEvent.OPEN_FOLDER, filePath};
         new FolderTask().execute(objects);
-    }
-
-    /**
-     * ListView 갱신
-     **/
-    private void updateList() {
-        mFileAdapter.setItemList(mItemList);
-        mFileAdapter.notifyDataSetChanged();
     }
 
     class FolderTask extends AsyncTask<Object, Void, Boolean> {
@@ -135,6 +120,15 @@ public class FileListFragment extends ListFragment {
                 // mItemList가 변경되었을 때에만 list update 하도록
                 updateList();
             }
+        }
+
+        /**
+         * ListView 갱신
+         **/
+        private void updateList() {
+            FileArrayAdapter adapter = (FileArrayAdapter) getListAdapter();
+            adapter.setItemList(mItemList);
+            adapter.notifyDataSetChanged();
         }
     }
 }

@@ -16,7 +16,6 @@ import java.util.List;
  * File operator 관련 class (파일 열기, 폴더 상/하위 이동 등..)
  */
 public class FileFunction {
-    private String mCurrentPath;      // 현재 파일의 경로
 
     /**
      * 상위/하위 폴더로 진입
@@ -89,22 +88,18 @@ public class FileFunction {
         for (File file : files) {
             fileList.add(new FileItem(
                     file.getAbsolutePath(),
+                    file.getName(),
                     file.lastModified(),
                     file.length(),
                     file.isDirectory()));
         }
 
-        if (fileList.isEmpty()) {
-            mCurrentPath = path + "/" + FileManagerDefine.UPPER_FOLDER;
-        } else {
-            mCurrentPath = fileList.get(0).getFilePath();
-        }
-
-        File parent = new File(mCurrentPath).getParentFile().getParentFile();
+        File parent = new File(path).getParentFile();
         if (isExist(parent)) {
-            // 상위 경로가 존재할 때에는 .. 추가
+            // 상위 경로가 존재할 때 추가
             fileList.add(0, new FileItem(
-                    parent.getAbsolutePath() + "/" + FileManagerDefine.UPPER_FOLDER,
+                    parent.getAbsolutePath(),
+                    FileManagerDefine.UPPER_FOLDER,
                     0,
                     0,
                     true));
@@ -120,13 +115,5 @@ public class FileFunction {
      */
     private boolean isExist(File file) {
         return file != null && file.exists() && !file.getAbsolutePath().equals("/");
-    }
-
-    public String getCurrentPath() {
-        return mCurrentPath;
-    }
-
-    public void setCurrentPath(String mCurrentPath) {
-        this.mCurrentPath = mCurrentPath;
     }
 }

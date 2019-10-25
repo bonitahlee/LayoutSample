@@ -12,16 +12,6 @@ import java.text.SimpleDateFormat;
 public class FileItemUtils {
 
     /**
-     * 파일 이름 반환
-     *
-     * @param path file.getAbsolutePath()
-     * @return file.getName()
-     */
-    public static String getFileName(String path) {
-        return path.substring(path.lastIndexOf('/') + 1);
-    }
-
-    /**
      * 파일 확장자 반환
      *
      * @param name file.getName()
