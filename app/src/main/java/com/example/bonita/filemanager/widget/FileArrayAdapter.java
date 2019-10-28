@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bonita.filemanager.R;
+import com.example.bonita.filemanager.util.FileAdapterClickListener;
 import com.example.bonita.filemanager.define.FileManagerDefine;
 
 import java.util.ArrayList;
@@ -20,9 +21,11 @@ import java.util.List;
 
 public class FileArrayAdapter extends RecyclerView.Adapter<FileArrayAdapter.FileInfoViewHolder> {
     private List<FileItem> mItemList;
+    private FileAdapterClickListener mClickListener;
 
-    public FileArrayAdapter(List<FileItem> objects) {
+    public FileArrayAdapter(List<FileItem> objects, FileAdapterClickListener listener) {
         mItemList = new ArrayList<>();
+        mClickListener = listener;
         setItemList(objects);
     }
 
@@ -36,7 +39,7 @@ public class FileArrayAdapter extends RecyclerView.Adapter<FileArrayAdapter.File
     @Override
     public FileInfoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_text_item, parent, false);
-        return new FileInfoViewHolder(view);
+        return new FileInfoViewHolder(view, mClickListener);
     }
 
     /**
@@ -114,14 +117,14 @@ public class FileArrayAdapter extends RecyclerView.Adapter<FileArrayAdapter.File
     /**
      * item에 관한 정보를 담고있는 holder. (재사용 하기 위해 추가)
      */
-    class FileInfoViewHolder extends RecyclerView.ViewHolder {
+    class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView fileNameTv;
         private TextView fileDateTv;
         private TextView fileSizeTv;
         private ImageView fileImage;
         private ImageView favorImage;
 
-        FileInfoViewHolder(View view) {
+        FileInfoViewHolder(View view, FileAdapterClickListener listener) {
             super(view);
             fileNameTv = view.findViewById(R.id.tv_file_name);
             fileDateTv = view.findViewById(R.id.tv_file_date);
@@ -131,6 +134,10 @@ public class FileArrayAdapter extends RecyclerView.Adapter<FileArrayAdapter.File
 
             // image_favor view selector 구현. 여기다 하는게 맞나용?
             addFavorSelector();
+
+            // set item click listener
+            mClickListener = listener;
+            view.setOnClickListener(this);
         }
 
         /**
@@ -143,6 +150,11 @@ public class FileArrayAdapter extends RecyclerView.Adapter<FileArrayAdapter.File
                     view.setSelected(!view.isSelected());
                 }
             });
+        }
+
+        @Override
+        public void onClick(View v) {
+            mClickListener.onClick(v, getAdapterPosition());
         }
     }
 }

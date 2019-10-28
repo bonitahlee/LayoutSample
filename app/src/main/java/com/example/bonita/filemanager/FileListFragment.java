@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.example.bonita.filemanager.define.FileManagerDefine;
 import com.example.bonita.filemanager.event.FileEvent;
 import com.example.bonita.filemanager.util.FileFunction;
+import com.example.bonita.filemanager.util.FileAdapterClickListener;
 import com.example.bonita.filemanager.widget.FileArrayAdapter;
 import com.example.bonita.filemanager.widget.FileItem;
 
@@ -64,28 +65,30 @@ public class FileListFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter
-        mFileAdapter = new FileArrayAdapter(mItemList);
+        mFileAdapter = new FileArrayAdapter(mItemList, mItemClickListener);
         mRecyclerView.setAdapter(mFileAdapter);
 
-        // ListView 의 항목을 선택했을 경우 키 처리
-        mRecyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //FileItem item = (FileItem) adapterView.getItemAtPosition(i);
-                FileItem item = mItemList.get(0);
-                String filePath = item.getFilePath();
-
-                if (item.isDir()) {
-                    // 상위/하위 폴더로 진입
-                    openFolder(filePath);
-                } else {
-                    // 파일 열기
-                    mFileFunction.openFile(FileListFragment.this, filePath);
-                }
-            }
-        });
         openFolder(FileManagerDefine.PATH_ROOT);
     }
+
+    /**
+     * ListView 의 항목을 선택했을 경우 키 처리
+     */
+    FileAdapterClickListener mItemClickListener = new FileAdapterClickListener() {
+        @Override
+        public void onClick(View view, int position) {
+            FileItem item = mFileAdapter.getItem(position);
+            String filePath = item.getFilePath();
+
+            if (item.isDir()) {
+                // 상위/하위 폴더로 진입
+                openFolder(filePath);
+            } else {
+                // 파일 열기
+                mFileFunction.openFile(FileListFragment.this, filePath);
+            }
+        }
+    };
 
     /**
      * 상위/하위 폴더 진입
