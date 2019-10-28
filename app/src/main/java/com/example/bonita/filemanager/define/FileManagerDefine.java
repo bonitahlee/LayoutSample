@@ -1,5 +1,6 @@
 package com.example.bonita.filemanager.define;
 
+import android.Manifest;
 import android.os.Environment;
 
 import java.util.Arrays;
@@ -9,6 +10,9 @@ import java.util.List;
  * 각종 static final 변수들을 담아두는 class
  */
 public class FileManagerDefine {
+    public static final String[] EXTERNAL_PERMS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+    public static final int EXTERNAL_REQUEST = 138;
+
     public static final String PATH_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String UPPER_FOLDER = "..";
 
