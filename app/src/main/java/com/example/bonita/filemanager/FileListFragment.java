@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
 import com.example.bonita.filemanager.event.FileEvent;
-import com.example.bonita.filemanager.util.FileFunction;
 import com.example.bonita.filemanager.util.FileAdapterClickListener;
+import com.example.bonita.filemanager.util.FileFunction;
 import com.example.bonita.filemanager.widget.FileArrayAdapter;
 import com.example.bonita.filemanager.widget.FileItem;
 
@@ -61,7 +61,7 @@ public class FileListFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter
