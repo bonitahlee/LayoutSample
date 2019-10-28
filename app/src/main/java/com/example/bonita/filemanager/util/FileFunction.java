@@ -2,7 +2,6 @@ package com.example.bonita.filemanager.util;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
 
 import com.example.bonita.filemanager.FileListFragment;
 import com.example.bonita.filemanager.define.FileManagerDefine;
@@ -41,15 +40,17 @@ public class FileFunction {
     public void openFile(FileListFragment fragment, String path) {
         Intent sendIntent = new Intent(Intent.ACTION_VIEW);
         sendIntent.setDataAndType(
-                Uri.fromFile(new File(path)),
+                FileUtils.getUriFromFile(fragment.getContext(), path),
                 FileUtils.getMimeType(path));
+        sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         try {
             fragment.startActivity(sendIntent);
         } catch (ActivityNotFoundException e) {
             // emulator에 실행할 app이 설치되어 있지 않다면 모든타입("*/*")으로 바꿔서 보내도록 exception 처리
-            e.printStackTrace();
-            sendIntent.setDataAndType(Uri.fromFile(new File(path)), "*/*");
+            sendIntent.setDataAndType(
+                    FileUtils.getUriFromFile(fragment.getContext(), path),
+                    "*/*");
             fragment.startActivity(sendIntent);
         }
     }

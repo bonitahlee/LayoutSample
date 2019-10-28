@@ -1,8 +1,14 @@
 package com.example.bonita.filemanager.util;
 
+import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
+
 import com.example.bonita.filemanager.R;
 import com.example.bonita.filemanager.define.FileManagerDefine;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
@@ -121,6 +127,22 @@ public class FileUtils {
             return "video/*";
         } else {
             return "*/*";
+        }
+    }
+
+    /**
+     * 매개변수로 넘어온 path의 Uri를 반환
+     * API가 24이상인 경우, 보안이 강화됨에 따라 fileProvider를 사용해서 Uri를 가져와야 함
+     *
+     * @param path Uri를 가져올 파일 경로
+     */
+    public static Uri getUriFromFile(Context context, String path) {
+        File file = new File(path);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // API 24 이상 일경우
+            return FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
+        } else {
+            return Uri.fromFile(file);
         }
     }
 }
