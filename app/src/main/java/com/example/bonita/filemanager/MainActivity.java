@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (hasPermission()) {
+        if (hasStoragePermission()) {
             // storage 권한이 있다면 fragment를 띄움
             startFragment();
         }
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return true: 권한 있음, false: 권한 없음->요청 intent 보냄
      */
-    public boolean hasPermission() {
+    public boolean hasStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!hasPermission(FileManagerDefine.EXTERNAL_PERMS)) {
                 requestPermissions(FileManagerDefine.EXTERNAL_PERMS, FileManagerDefine.EXTERNAL_REQUEST);
@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == FileManagerDefine.EXTERNAL_REQUEST) {
             boolean isAllPermitted = false;
-            for (int i = 0; i < grantResults.length; i++) {
-                isAllPermitted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
+            for (int grantResult : grantResults) {
+                isAllPermitted = grantResult == PackageManager.PERMISSION_GRANTED;
             }
             if (isAllPermitted) {
                 // 요청한 권한을 사용자가 허용 했다면 앱 시작

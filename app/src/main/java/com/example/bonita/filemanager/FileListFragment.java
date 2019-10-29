@@ -16,8 +16,8 @@ import com.example.bonita.filemanager.define.FileManagerDefine;
 import com.example.bonita.filemanager.event.FileEvent;
 import com.example.bonita.filemanager.util.FileAdapterClickListener;
 import com.example.bonita.filemanager.util.FileFunction;
-import com.example.bonita.filemanager.widget.FileArrayAdapter;
 import com.example.bonita.filemanager.util.FileItem;
+import com.example.bonita.filemanager.widget.FileArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +26,9 @@ import java.util.List;
  * 파일들의 ListView을 보여주는 Fragment
  */
 public class FileListFragment extends Fragment {
-    private final String TAG = this.getClass().getSimpleName();   // "FilListFragment"
+    private final String TAG = "FilListFragment";
 
-    private RecyclerView mRecyclerView;
     private FileArrayAdapter mFileAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private FileFunction mFileFunction;
     private List<FileItem> mItemList;
@@ -49,30 +47,30 @@ public class FileListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initListView(view);
+        initRecyclerView(view);
     }
 
     /**
-     * ListView 구성
+     * RecyclerView 구성
      */
-    private void initListView(View view) {
-        mItemList = new ArrayList<>();
-        mRecyclerView = view.findViewById(R.id.file_list);
-        mRecyclerView.setHasFixedSize(true);
+    private void initRecyclerView(View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.file_list);
+        recyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // specify an adapter
+        // initialize adapter
+        mItemList = new ArrayList<>();
         mFileAdapter = new FileArrayAdapter(mItemList, mItemClickListener);
-        mRecyclerView.setAdapter(mFileAdapter);
+        recyclerView.setAdapter(mFileAdapter);
 
+        // show file list
         openFolder(FileManagerDefine.PATH_ROOT);
     }
 
     /**
-     * ListView 의 항목을 선택했을 경우 키 처리
+     * Adapter 의 항목을 선택했을 경우 키 처리
      */
     FileAdapterClickListener mItemClickListener = new FileAdapterClickListener() {
         @Override
@@ -100,6 +98,9 @@ public class FileListFragment extends Fragment {
         new FolderTask().execute(objects);
     }
 
+    /**
+     * 폴더 관련 event 처리
+     */
     class FolderTask extends AsyncTask<Object, Void, Boolean> {
         private ProgressDialog dialog;
 
@@ -138,7 +139,7 @@ public class FileListFragment extends Fragment {
         }
 
         /**
-         * ListView 갱신
+         * Adapter 항목 갱신
          **/
         private void updateList() {
             mFileAdapter.setItemList(mItemList);

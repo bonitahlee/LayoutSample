@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bonita.filemanager.R;
-import com.example.bonita.filemanager.util.FileAdapterClickListener;
 import com.example.bonita.filemanager.define.FileManagerDefine;
+import com.example.bonita.filemanager.util.FileAdapterClickListener;
 import com.example.bonita.filemanager.util.FileItem;
 
 import java.util.ArrayList;
@@ -32,10 +32,6 @@ public class FileArrayAdapter extends RecyclerView.Adapter<FileArrayAdapter.File
 
     /**
      * Create new views (invoked by the layout manager)
-     *
-     * @param parent
-     * @param viewType
-     * @return
      */
     @Override
     public FileInfoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -45,9 +41,6 @@ public class FileArrayAdapter extends RecyclerView.Adapter<FileArrayAdapter.File
 
     /**
      * Replace the contents of a view (invoked by the layout manager)
-     *
-     * @param holder
-     * @param position
      */
     @Override
     public void onBindViewHolder(FileInfoViewHolder holder, int position) {
