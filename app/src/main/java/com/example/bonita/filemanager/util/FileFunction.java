@@ -84,15 +84,18 @@ public class FileFunction {
      * @return path폴더의 하위 항목(폴더/파일들)
      */
     private List<FileItem> addFileItemList(String path, File[] files) {
-        List<FileItem> fileList = new ArrayList<>();
+        List<FileItem> fileList = new ArrayList<>();     // 폴더 + 파일을 담는 list
+        List<FileItem> onlyFileList = new ArrayList<>();  // file을 폴더 밑에 정렬하기 위해 파일만 담는 list 생성
+
+        // 폴더를 먼저 정렬하기 위해, 파일만 따로 구분한 뒤 나중에 fileList로 합쳐줌
         for (File file : files) {
-            fileList.add(new FileItem(
-                    file.getAbsolutePath(),
-                    file.getName(),
-                    file.lastModified(),
-                    file.length(),
-                    file.isDirectory()));
+            if (file.isDirectory()) {
+                addFileList(fileList, file);
+            } else {
+                addFileList(onlyFileList, file);
+            }
         }
+        fileList.addAll(onlyFileList);
 
         File parent = new File(path).getParentFile();
         if (isExist(parent)) {
@@ -105,6 +108,18 @@ public class FileFunction {
                     true));
         }
         return fileList;
+    }
+
+    /**
+     * 매개변수로 넘어온 list에 FileItem을 생성하여 넣어줌
+     */
+    private void addFileList(List<FileItem> list, File file) {
+        list.add(new FileItem(
+                file.getAbsolutePath(),
+                file.getName(),
+                file.lastModified(),
+                file.length(),
+                file.isDirectory()));
     }
 
     /**
