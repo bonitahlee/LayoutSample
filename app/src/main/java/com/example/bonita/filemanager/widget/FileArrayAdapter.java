@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.bonita.filemanager.R;
 import com.example.bonita.filemanager.util.FileAdapterClickListener;
 import com.example.bonita.filemanager.define.FileManagerDefine;
+import com.example.bonita.filemanager.util.FileItem;
 
 import java.util.ArrayList;
 import java.util.List;

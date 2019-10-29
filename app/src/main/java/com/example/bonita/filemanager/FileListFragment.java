@@ -17,7 +17,7 @@ import com.example.bonita.filemanager.event.FileEvent;
 import com.example.bonita.filemanager.util.FileAdapterClickListener;
 import com.example.bonita.filemanager.util.FileFunction;
 import com.example.bonita.filemanager.widget.FileArrayAdapter;
-import com.example.bonita.filemanager.widget.FileItem;
+import com.example.bonita.filemanager.util.FileItem;
 
 import java.util.ArrayList;
 import java.util.List;

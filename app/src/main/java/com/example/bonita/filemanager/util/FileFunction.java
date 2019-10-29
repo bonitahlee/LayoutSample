@@ -5,7 +5,6 @@ import android.content.Intent;
 
 import com.example.bonita.filemanager.FileListFragment;
 import com.example.bonita.filemanager.define.FileManagerDefine;
-import com.example.bonita.filemanager.widget.FileItem;
 
 import java.io.File;
 import java.util.ArrayList;
