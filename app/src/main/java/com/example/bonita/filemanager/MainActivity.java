@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 // 요청한 권한을 사용자가 허용 했다면 앱 시작
                 startFragment();
             } else {
-                Toast.makeText(this, "please allow permissions...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.ACS_MSG_PERMISSION_DENIED, Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
