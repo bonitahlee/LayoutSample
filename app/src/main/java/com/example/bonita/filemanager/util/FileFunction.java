@@ -111,9 +111,9 @@ public class FileFunction {
      * 이동하려는 경로가 존재하는지 확인(최상위폴더는 제외)
      *
      * @param file 이동하려는 파일
-     * @return true: 이동 가능, false: 이동 불가(최상위 폴더일 경우) -> 앱 종료
+     * @return true: 이동 가능, false: 이동 불가(최상위 폴더일 경우)
      */
     private boolean isExist(File file) {
-        return file != null && file.exists() && !file.getAbsolutePath().equals("/");
+        return file != null && file.exists() && !file.getAbsolutePath().equals(FileManagerDefine.PATH_ROOT_TOP);
     }
 }
