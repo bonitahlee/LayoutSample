@@ -21,14 +21,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         if (hasStoragePermission()) {
             // storage 권한이 있다면 fragment를 띄움
-            startFragment();
+            attachFragment();
         }
     }
 
     /**
      * attach FileListFragment
      */
-    private void startFragment() {
+    private void attachFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layout_main, new FileListFragment()).commit();
     }
@@ -71,9 +71,10 @@ public class MainActivity extends AppCompatActivity {
             for (int grantResult : grantResults) {
                 isAllPermitted = grantResult == PackageManager.PERMISSION_GRANTED;
             }
+
             if (isAllPermitted) {
                 // 요청한 권한을 사용자가 허용 했다면 앱 시작
-                startFragment();
+                attachFragment();
             } else {
                 Toast.makeText(this, R.string.ACS_MSG_PERMISSION_DENIED, Toast.LENGTH_SHORT).show();
                 finish();

@@ -37,6 +37,7 @@ public class FileListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFileFunction = new FileFunction();
+        mItemList = new ArrayList<>();
     }
 
     @Override
@@ -47,13 +48,8 @@ public class FileListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initRecyclerView(view);
-    }
 
-    /**
-     * RecyclerView 구성
-     */
-    private void initRecyclerView(View view) {
+        // RecyclerView 구성
         RecyclerView recyclerView = view.findViewById(R.id.file_list);
         recyclerView.setHasFixedSize(true);
 
@@ -61,32 +57,32 @@ public class FileListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // initialize adapter
-        mItemList = new ArrayList<>();
-        mFileAdapter = new FileArrayAdapter(mItemList, mItemClickListener);
+        mFileAdapter = new FileArrayAdapter(mItemList, new FileAdapterClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                // Adapter 의 항목을 선택했을 경우 키 처리
+                FileItem item = mFileAdapter.getItem(position);
+                String filePath = item.getFilePath();
+
+                if (item.isDir()) {
+                    // 상위/하위 폴더로 진입
+                    openFolder(filePath);
+                } else {
+                    // 파일 열기
+                    mFileFunction.openFile(FileListFragment.this, filePath);
+                }
+            }
+        });
         recyclerView.setAdapter(mFileAdapter);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         // show file list
         openFolder(FileManagerDefine.PATH_ROOT);
     }
-
-    /**
-     * Adapter 의 항목을 선택했을 경우 키 처리
-     */
-    FileAdapterClickListener mItemClickListener = new FileAdapterClickListener() {
-        @Override
-        public void onClick(View view, int position) {
-            FileItem item = mFileAdapter.getItem(position);
-            String filePath = item.getFilePath();
-
-            if (item.isDir()) {
-                // 상위/하위 폴더로 진입
-                openFolder(filePath);
-            } else {
-                // 파일 열기
-                mFileFunction.openFile(FileListFragment.this, filePath);
-            }
-        }
-    };
 
     /**
      * 상위/하위 폴더 진입

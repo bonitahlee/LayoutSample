@@ -23,7 +23,8 @@ public class FileFunction {
      * @return true: 이동함
      */
     public boolean openFolder(List<FileItem> itemList, String path) {
-        if (!isExist(new File(path))) {
+        File file = new File(path);
+        if (!isExist(file)) {
             // 이동하려는 폴더(상위 폴더로 이동일 때) 또는 현재 폴더(하위 폴더로 이동일 때)가 존재할 때에만 이동
             return false;
         }
@@ -90,9 +91,9 @@ public class FileFunction {
         // 폴더를 먼저 정렬하기 위해, 파일만 따로 구분한 뒤 나중에 fileList로 합쳐줌
         for (File file : files) {
             if (file.isDirectory()) {
-                addFileList(fileList, file);
+                addFileItem(fileList, file);
             } else {
-                addFileList(onlyFileList, file);
+                addFileItem(onlyFileList, file);
             }
         }
         fileList.addAll(onlyFileList);
@@ -113,7 +114,7 @@ public class FileFunction {
     /**
      * 매개변수로 넘어온 list에 FileItem을 생성하여 넣어줌
      */
-    private void addFileList(List<FileItem> list, File file) {
+    private void addFileItem(List<FileItem> list, File file) {
         list.add(new FileItem(
                 file.getAbsolutePath(),
                 file.getName(),
