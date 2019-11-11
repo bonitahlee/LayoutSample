@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import com.example.bonita.filemanager.FileInfoViewHolder;
 import com.example.bonita.filemanager.R;
 import com.example.bonita.filemanager.define.FileManagerDefine;
-import com.example.bonita.filemanager.util.FileAdapterClickListener;
-import com.example.bonita.filemanager.util.FileItem;
+import com.example.bonita.filemanager.FileAdapterClickListener;
+import com.example.bonita.filemanager.FileItem;
 
 import java.util.ArrayList;
 import java.util.List;

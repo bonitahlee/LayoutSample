@@ -14,7 +14,6 @@ public class FileManagerDefine {
     public static final int EXTERNAL_REQUEST = 138;
 
     public static final String PATH_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath();
-    public static final String PATH_ROOT_TOP = "/storage/emulated";
     public static final String UPPER_FOLDER = "..";
 
     public static final List<String> EXT_TEXT = Arrays.asList("txt");

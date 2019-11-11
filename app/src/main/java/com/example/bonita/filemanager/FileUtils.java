@@ -1,11 +1,10 @@
-package com.example.bonita.filemanager.util;
+package com.example.bonita.filemanager;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
 
-import com.example.bonita.filemanager.R;
 import com.example.bonita.filemanager.define.FileManagerDefine;
 
 import java.io.File;
@@ -106,7 +105,7 @@ public class FileUtils {
     /**
      * 문서 type 별 mime type 가져오기
      */
-    static String getMimeType(String path) {
+    public static String getMimeType(String path) {
         String sExt = getFileExtension(path).toLowerCase();
 
         if (FileManagerDefine.EXT_TEXT.contains(sExt)) {

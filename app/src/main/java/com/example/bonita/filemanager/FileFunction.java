@@ -1,9 +1,8 @@
-package com.example.bonita.filemanager.util;
+package com.example.bonita.filemanager;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 
-import com.example.bonita.filemanager.FileListFragment;
 import com.example.bonita.filemanager.define.FileManagerDefine;
 
 import java.io.File;
@@ -88,6 +87,7 @@ public class FileFunction {
         List<FileItem> fileList = new ArrayList<>();     // 폴더 + 파일을 담는 list
         List<FileItem> onlyFileList = new ArrayList<>();  // file을 폴더 밑에 정렬하기 위해 파일만 담는 list 생성
 
+        ////// TODO: 2019-11-07 추후에 sorting관련해서 변경 예정 
         // 폴더를 먼저 정렬하기 위해, 파일만 따로 구분한 뒤 나중에 fileList로 합쳐줌
         for (File file : files) {
             if (file.isDirectory()) {
@@ -130,6 +130,7 @@ public class FileFunction {
      * @return true: 이동 가능, false: 이동 불가(최상위 폴더일 경우)
      */
     private boolean isExist(File file) {
-        return file != null && file.exists() && !file.getAbsolutePath().equals(FileManagerDefine.PATH_ROOT_TOP);
+        String topPath = new File(FileManagerDefine.PATH_ROOT).getParent();
+        return file != null && file.exists() && !file.getAbsolutePath().equals(topPath);
     }
 }

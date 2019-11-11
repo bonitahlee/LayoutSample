@@ -1,4 +1,4 @@
-package com.example.bonita.filemanager.util;
+package com.example.bonita.filemanager;
 
 import android.view.View;
 

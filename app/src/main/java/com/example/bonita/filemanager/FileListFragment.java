@@ -14,13 +14,12 @@ import android.view.ViewGroup;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
 import com.example.bonita.filemanager.event.FileEvent;
-import com.example.bonita.filemanager.util.FileAdapterClickListener;
-import com.example.bonita.filemanager.util.FileFunction;
-import com.example.bonita.filemanager.util.FileItem;
 import com.example.bonita.filemanager.widget.FileArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+////// TODO: 2019-11-07 FileAdapter를 들고있어야 할까? itemList도? 전체적인 구조변경 필요(adapter에 관해 많이 찾아보기) 
 
 /**
  * 파일들의 ListView을 보여주는 Fragment
@@ -93,6 +92,8 @@ public class FileListFragment extends Fragment {
         Object[] objects = new Object[]{FileEvent.OPEN_FOLDER, filePath};
         new FolderTask().execute(objects);
     }
+
+    ////// TODO: 2019-11-07 feedback: fileEventHandler로 대체 
 
     /**
      * 폴더 관련 event 처리

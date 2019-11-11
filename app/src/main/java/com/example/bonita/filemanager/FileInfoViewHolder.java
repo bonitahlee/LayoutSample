@@ -5,8 +5,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.bonita.filemanager.util.FileAdapterClickListener;
-
 /**
  * item에 관한 정보를 담고있는 holder. (재사용 하기 위해 추가)
  */
