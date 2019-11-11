@@ -28,6 +28,7 @@ public class FileListFragment extends Fragment {
     private final String TAG = "FilListFragment";
 
     private FileArrayAdapter mFileAdapter;
+    private LinearLayoutManager mLayoutManager;
 
     private FileFunction mFileFunction;
     private List<FileItem> mItemList;
@@ -53,7 +54,8 @@ public class FileListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
 
         // initialize adapter
         mFileAdapter = new FileArrayAdapter(mItemList, new FileAdapterClickListener() {
@@ -141,6 +143,7 @@ public class FileListFragment extends Fragment {
         private void updateList() {
             mFileAdapter.setItemList(mItemList);
             mFileAdapter.notifyDataSetChanged();
+            mLayoutManager.scrollToPosition(0);
         }
     }
 }
