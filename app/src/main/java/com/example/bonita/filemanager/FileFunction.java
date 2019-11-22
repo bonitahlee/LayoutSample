@@ -1,9 +1,13 @@
 package com.example.bonita.filemanager;
 
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
+import com.example.bonita.filemanager.event.FileEvent;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,6 +17,13 @@ import java.util.List;
  * File operator 관련 class (파일 열기, 폴더 상/하위 이동 등..)
  */
 public class FileFunction {
+    private static final String TAG = "FileFunction";
+
+    private List<FileItem> mItemList;
+
+    public FileFunction() {
+        mItemList = new ArrayList<>();
+    }
 
     /**
      * 상위/하위 폴더로 진입
@@ -132,5 +143,67 @@ public class FileFunction {
     private boolean isExist(File file) {
         String topPath = new File(FileManagerDefine.PATH_ROOT).getParent();
         return file != null && file.exists() && !file.getAbsolutePath().equals(topPath);
+    }
+
+    ////// TODO: 2019-11-07 feedback: fileEventHandler로 대체
+
+    /**
+     * 폴더 관련 event 처리
+     */
+    public class FolderTask extends AsyncTask<Object, Void, Boolean> {
+        private ProgressDialog dialog;
+        private FileListFragment fragment;
+
+        FolderTask(FileListFragment fragment) {
+            this.fragment = fragment;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.e(TAG, "pre");
+            dialog = new ProgressDialog(fragment.getActivity());
+            dialog.setMessage("Loading...");
+            dialog.setIndeterminate(true);
+            dialog.setCancelable(true);
+            dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Object... params) {
+            Log.e(TAG, "doin");
+            switch ((int) params[0]) {
+                // 폴더 열기
+                case FileEvent.OPEN_FOLDER:
+                    return openFolder(mItemList, (String) params[1]);
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            Log.e(TAG, "post");
+            dialog.dismiss();
+
+            if (result) {
+                // mItemList가 변경되었을 때에만 list update 하도록
+                updateList();
+            }
+        }
+
+        /**
+         * Adapter 항목 갱신
+         **/
+        private void updateList() {
+            fragment.getAdapter().setItemList(mItemList);
+            fragment.getAdapter().notifyDataSetChanged();
+//            mLayoutManager.scrollToPosition(0);
+        }
+    }
+
+    public FolderTask getAsyncTask(FileListFragment fragment) {
+        return new FolderTask(fragment);
     }
 }

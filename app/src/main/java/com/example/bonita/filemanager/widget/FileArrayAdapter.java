@@ -23,10 +23,9 @@ public class FileArrayAdapter extends RecyclerView.Adapter<FileInfoViewHolder> {
     private List<FileItem> mItemList;
     private FileAdapterClickListener mClickListener;
 
-    public FileArrayAdapter(List<FileItem> objects, FileAdapterClickListener listener) {
+    public FileArrayAdapter(FileAdapterClickListener listener) {
         mItemList = new ArrayList<>();
         mClickListener = listener;
-        setItemList(objects);
     }
 
     /**

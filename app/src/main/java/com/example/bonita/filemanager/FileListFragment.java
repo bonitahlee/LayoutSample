@@ -1,13 +1,10 @@
 package com.example.bonita.filemanager;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +12,6 @@ import android.view.ViewGroup;
 import com.example.bonita.filemanager.define.FileManagerDefine;
 import com.example.bonita.filemanager.event.FileEvent;
 import com.example.bonita.filemanager.widget.FileArrayAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 ////// TODO: 2019-11-07 FileAdapter를 들고있어야 할까? itemList도? 전체적인 구조변경 필요(adapter에 관해 많이 찾아보기) 
 
@@ -31,13 +25,11 @@ public class FileListFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
 
     private FileFunction mFileFunction;
-    private List<FileItem> mItemList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFileFunction = new FileFunction();
-        mItemList = new ArrayList<>();
     }
 
     @Override
@@ -58,7 +50,7 @@ public class FileListFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
 
         // initialize adapter
-        mFileAdapter = new FileArrayAdapter(mItemList, new FileAdapterClickListener() {
+        mFileAdapter = new FileArrayAdapter(new FileAdapterClickListener() {
             @Override
             public void onClick(View view, int position) {
                 // Adapter 의 항목을 선택했을 경우 키 처리
@@ -92,58 +84,10 @@ public class FileListFragment extends Fragment {
      */
     private void openFolder(String filePath) {
         Object[] objects = new Object[]{FileEvent.OPEN_FOLDER, filePath};
-        new FolderTask().execute(objects);
+        mFileFunction.getAsyncTask(this).execute(objects);
     }
 
-    ////// TODO: 2019-11-07 feedback: fileEventHandler로 대체 
-
-    /**
-     * 폴더 관련 event 처리
-     */
-    class FolderTask extends AsyncTask<Object, Void, Boolean> {
-        private ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.e(TAG, "pre");
-            dialog = new ProgressDialog(FileListFragment.this.getActivity());
-            dialog.setMessage("Loading...");
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(true);
-            dialog.show();
-        }
-
-        @Override
-        protected Boolean doInBackground(Object... params) {
-            Log.e(TAG, "doin");
-            switch ((int) params[0]) {
-                // 폴더 열기
-                case FileEvent.OPEN_FOLDER:
-                    return mFileFunction.openFolder(mItemList, (String) params[1]);
-                default:
-                    return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-            Log.e(TAG, "post");
-            dialog.dismiss();
-            if (result) {
-                // mItemList가 변경되었을 때에만 list update 하도록
-                updateList();
-            }
-        }
-
-        /**
-         * Adapter 항목 갱신
-         **/
-        private void updateList() {
-            mFileAdapter.setItemList(mItemList);
-            mFileAdapter.notifyDataSetChanged();
-            mLayoutManager.scrollToPosition(0);
-        }
+    public FileArrayAdapter getAdapter() {
+        return mFileAdapter;
     }
 }
