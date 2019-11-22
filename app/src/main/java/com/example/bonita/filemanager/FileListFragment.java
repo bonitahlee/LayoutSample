@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,6 +79,18 @@ public class FileListFragment extends Fragment {
     }
 
     /**
+     * 키 이벤트 처리
+     */
+    public boolean onKeyUp(int keyCode) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // TODO: 2019-11-22 delete 기능
+            deleteFile();
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 상위/하위 폴더 진입
      *
      * @param filePath
@@ -85,6 +98,10 @@ public class FileListFragment extends Fragment {
     private void openFolder(String filePath) {
         Object[] objects = new Object[]{FileEvent.OPEN_FOLDER, filePath};
         mFileFunction.getAsyncTask(this).execute(objects);
+    }
+
+    private void deleteFile() {
+
     }
 
     public FileArrayAdapter getAdapter() {

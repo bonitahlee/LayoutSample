@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * File operator 관련 class (파일 열기, 폴더 상/하위 이동 등..)
+ * File operator 관련 class (파일 열기, 폴더 상/하위 이동, 삭제 등..)
  */
 public class FileFunction {
     private static final String TAG = "FileFunction";
@@ -199,6 +199,7 @@ public class FileFunction {
         private void updateList() {
             fragment.getAdapter().setItemList(mItemList);
             fragment.getAdapter().notifyDataSetChanged();
+            // TODO: 2019-11-22 왜 position 초기화는 안될까?
 //            mLayoutManager.scrollToPosition(0);
         }
     }

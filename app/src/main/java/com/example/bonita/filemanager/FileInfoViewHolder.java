@@ -26,24 +26,9 @@ public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.
         fileImage = view.findViewById(R.id.image_file);
         favorImage = view.findViewById(R.id.image_favor);
 
-        // image_favor view selector 구현. 여기다 하는게 맞나용?
-        addFavorSelector();
-
         // set item click listener
         mClickListener = listener;
         view.setOnClickListener(this);
-    }
-
-    /**
-     * R.id.image_favor이 selector [image는 selected되었는지 기억 못하므로 code로 추가]
-     */
-    private void addFavorSelector() {
-        favorImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                view.setSelected(!view.isSelected());
-            }
-        });
     }
 
     @Override

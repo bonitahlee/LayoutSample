@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
@@ -15,10 +16,15 @@ import com.example.bonita.filemanager.define.FileManagerDefine;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private FileListFragment mFileListFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mFileListFragment = new FileListFragment();
+
         if (hasStoragePermission()) {
             // storage 권한이 있다면 fragment를 띄움
             attachFragment();
@@ -30,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void attachFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.layout_main, new FileListFragment()).commit();
+                .replace(R.id.layout_main, mFileListFragment).commit();
     }
 
     /**
@@ -55,6 +61,14 @@ public class MainActivity extends AppCompatActivity {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, perms[0])
                 && PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, perms[1]));
 
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (mFileListFragment.onKeyUp(keyCode)) {
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     /**

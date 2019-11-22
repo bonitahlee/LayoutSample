@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.bonita.filemanager.FileInfoViewHolder;
 import com.example.bonita.filemanager.R;
@@ -21,10 +22,12 @@ import java.util.List;
 
 public class FileArrayAdapter extends RecyclerView.Adapter<FileInfoViewHolder> {
     private List<FileItem> mItemList;
+    private List<String> mCheckedList;
     private FileAdapterClickListener mClickListener;
 
     public FileArrayAdapter(FileAdapterClickListener listener) {
         mItemList = new ArrayList<>();
+        mCheckedList = new ArrayList<>();
         mClickListener = listener;
     }
 
@@ -49,6 +52,9 @@ public class FileArrayAdapter extends RecyclerView.Adapter<FileInfoViewHolder> {
 
         // textView imageView 구성
         setTextAndImage(holder, position);
+
+        // image_favor view selector 구현. 여기다 하는게 맞나용?
+        addFavorSelector(holder.getFavorImage(), position);
     }
 
     /**
@@ -83,6 +89,28 @@ public class FileArrayAdapter extends RecyclerView.Adapter<FileInfoViewHolder> {
         viewHolder.getFileDateTv().setText(mItemList.get(position).getFileDate());
         viewHolder.getFileSizeTv().setText(mItemList.get(position).getFileSize());
         viewHolder.getFileImage().setImageResource(mItemList.get(position).getImageResId());
+    }
+
+    /**
+     * R.id.image_favor이 selector [image는 selected되었는지 기억 못하므로 code로 추가]
+     */
+    private void addFavorSelector(ImageView favorImage, final int position) {
+        favorImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isSelected = view.isSelected();
+                view.setSelected(!isSelected);
+                setSelection(isSelected, String.valueOf(position));
+            }
+        });
+    }
+
+    private void setSelection(boolean isSelected, String position) {
+        if (isSelected) {
+            mCheckedList.add(position);
+        } else {
+            mCheckedList.remove(position);
+        }
     }
 
     public FileItem getItem(int position) {
