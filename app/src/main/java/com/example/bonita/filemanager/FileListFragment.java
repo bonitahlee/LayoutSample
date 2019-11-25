@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
-import com.example.bonita.filemanager.event.FileEvent;
 import com.example.bonita.filemanager.widget.FileArrayAdapter;
 
 ////// TODO: 2019-11-07 FileAdapter를 들고있어야 할까?
@@ -60,7 +59,7 @@ public class FileListFragment extends Fragment {
 
                 if (item.isDir()) {
                     // 상위/하위 폴더로 진입
-                    openFolder(filePath);
+                    mFileFunction.openFolder(filePath);
                 } else {
                     // 파일 열기
                     mFileFunction.openFile(FileListFragment.this, filePath);
@@ -75,7 +74,7 @@ public class FileListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         // show file list
-        openFolder(FileManagerDefine.PATH_ROOT);
+        mFileFunction.openFolder(FileManagerDefine.PATH_ROOT);
     }
 
     /**
@@ -83,28 +82,10 @@ public class FileListFragment extends Fragment {
      */
     public boolean onKeyUp(int keyCode) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            deleteFile();
+            mFileFunction.deleteFile();
             return true;
         }
         return false;
-    }
-
-    /**
-     * 상위/하위 폴더 진입
-     *
-     * @param filePath filePath내로 진입
-     */
-    private void openFolder(String filePath) {
-        Object[] objects = new Object[]{FileEvent.OPEN_FOLDER, filePath};
-        mFileFunction.getAsyncTask(this).execute(objects);
-    }
-
-    /**
-     * 파일/폴더 삭제
-     */
-    private void deleteFile() {
-        Object[] objects = new Object[]{FileEvent.DELETE_FILE, null};
-        mFileFunction.getAsyncTask(this).execute(objects);
     }
 
     public FileArrayAdapter getAdapter() {
