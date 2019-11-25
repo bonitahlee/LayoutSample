@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 // 요청한 권한을 사용자가 허용 했다면 앱 시작
                 attachFragment();
             } else {
-                Toast.makeText(this, R.string.ACS_MSG_PERMISSION_DENIED, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.MSG_PERMISSION_DENIED, Toast.LENGTH_SHORT).show();
                 finish();
             }
         }

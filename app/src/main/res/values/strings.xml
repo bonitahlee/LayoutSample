@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">File Manager</string>
-    <string name="ACS_MSG_PERMISSION_DENIED">Permission Denied</string>
+    <string name="MSG_LOADING">Loading…</string>
+    <string name="MSG_PERMISSION_DENIED">Permission Denied</string>
 </resources>

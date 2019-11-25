@@ -6,5 +6,6 @@ package com.example.bonita.filemanager.event;
 public class FileEvent {
 
     public static final int OPEN_FOLDER = 0;
+    public static final int DELETE_FILE = 1;
 
 }

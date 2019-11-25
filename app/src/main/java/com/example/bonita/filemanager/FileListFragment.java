@@ -14,7 +14,7 @@ import com.example.bonita.filemanager.define.FileManagerDefine;
 import com.example.bonita.filemanager.event.FileEvent;
 import com.example.bonita.filemanager.widget.FileArrayAdapter;
 
-////// TODO: 2019-11-07 FileAdapter를 들고있어야 할까? itemList도? 전체적인 구조변경 필요(adapter에 관해 많이 찾아보기) 
+////// TODO: 2019-11-07 FileAdapter를 들고있어야 할까?
 
 /**
  * 파일들의 ListView을 보여주는 Fragment
@@ -83,7 +83,6 @@ public class FileListFragment extends Fragment {
      */
     public boolean onKeyUp(int keyCode) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // TODO: 2019-11-22 delete 기능
             deleteFile();
             return true;
         }
@@ -93,15 +92,19 @@ public class FileListFragment extends Fragment {
     /**
      * 상위/하위 폴더 진입
      *
-     * @param filePath
+     * @param filePath filePath내로 진입
      */
     private void openFolder(String filePath) {
         Object[] objects = new Object[]{FileEvent.OPEN_FOLDER, filePath};
         mFileFunction.getAsyncTask(this).execute(objects);
     }
 
+    /**
+     * 파일/폴더 삭제
+     */
     private void deleteFile() {
-
+        Object[] objects = new Object[]{FileEvent.DELETE_FILE, null};
+        mFileFunction.getAsyncTask(this).execute(objects);
     }
 
     public FileArrayAdapter getAdapter() {

@@ -12,6 +12,7 @@ import com.example.bonita.filemanager.event.FileEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * File operator 관련 class (파일 열기, 폴더 상/하위 이동, 삭제 등..)
@@ -19,30 +20,7 @@ import java.util.List;
 public class FileFunction {
     private static final String TAG = "FileFunction";
 
-    private List<FileItem> mItemList;
-
-    public FileFunction() {
-        mItemList = new ArrayList<>();
-    }
-
-    /**
-     * 상위/하위 폴더로 진입
-     *
-     * @param itemList
-     * @param path
-     * @return true: 이동함
-     */
-    public boolean openFolder(List<FileItem> itemList, String path) {
-        File file = new File(path);
-        if (!isExist(file)) {
-            // 이동하려는 폴더(상위 폴더로 이동일 때) 또는 현재 폴더(하위 폴더로 이동일 때)가 존재할 때에만 이동
-            return false;
-        }
-
-        itemList.clear();
-        itemList.addAll(getFileList(path));
-        return true;
-    }
+    private List<FileItem> mItemList = new ArrayList<>();
 
     /**
      * 파일 열기
@@ -145,31 +123,16 @@ public class FileFunction {
         return file != null && file.exists() && !file.getAbsolutePath().equals(topPath);
     }
 
-    /**
-     * 즐겨찾기 선택된 아이템들의 항목을 반환
-     */
-    public List<FileItem> getFavoredList() {
-        List<FileItem> fileItems = new ArrayList<>();
-
-        for (FileItem item : mItemList) {
-            if (item.isFavored()) {
-                fileItems.add(item);
-            }
-        }
-
-        return fileItems;
-    }
-
     ////// TODO: 2019-11-07 feedback: fileEventHandler로 대체
 
     /**
      * 폴더 관련 event 처리
      */
-    public class FolderTask extends AsyncTask<Object, Void, Boolean> {
+    public class FileTask extends AsyncTask<Object, Void, Boolean> {
         private ProgressDialog dialog;
         private FileListFragment fragment;
 
-        FolderTask(FileListFragment fragment) {
+        public FileTask(FileListFragment fragment) {
             this.fragment = fragment;
         }
 
@@ -178,7 +141,7 @@ public class FileFunction {
             super.onPreExecute();
             Log.e(TAG, "pre");
             dialog = new ProgressDialog(fragment.getActivity());
-            dialog.setMessage("Loading...");
+            dialog.setMessage(fragment.getString(R.string.MSG_LOADING));
             dialog.setIndeterminate(true);
             dialog.setCancelable(true);
             dialog.show();
@@ -191,6 +154,9 @@ public class FileFunction {
                 // 폴더 열기
                 case FileEvent.OPEN_FOLDER:
                     return openFolder(mItemList, (String) params[1]);
+                // 파일 삭제
+                case FileEvent.DELETE_FILE:
+                    return deleteFile(mItemList);
                 default:
                     return false;
             }
@@ -209,17 +175,78 @@ public class FileFunction {
         }
 
         /**
+         * 상위/하위 폴더로 진입
+         *
+         * @param path path 내로 진입
+         * @return true: 이동함
+         */
+        private boolean openFolder(List<FileItem> itemList, String path) {
+            File file = new File(path);
+            if (!isExist(file)) {
+                // 이동하려는 폴더(상위 폴더로 이동일 때) 또는 현재 폴더(하위 폴더로 이동일 때)가 존재할 때에만 이동
+                return false;
+            }
+
+            itemList.clear();
+            itemList.addAll(getFileList(path));
+            return true;
+        }
+
+        /**
+         * itemList에서 favor check된 파일을 삭제
+         */
+        private boolean deleteFile(List<FileItem> itemList) {
+            // favor check된 항목을 삭제
+            int iDeleteCount = 0;
+
+            ListIterator<FileItem> iterator = itemList.listIterator();
+            while (iterator.hasNext()) {
+                FileItem item = iterator.next();
+
+                if (!item.isFavored() || item.isDir()) {
+                    // 일단 파일들만 삭제 가능
+                    continue;
+                }
+
+                File file = new File(item.getFilePath());
+                if (isExist(file)) {
+                    iterator.remove();
+                    file.delete();
+                    iDeleteCount++;
+                }
+            }
+
+            // 삭제할 항목이 없을 때의 예외처리
+            if (iDeleteCount == 0) {
+                return false;
+            }
+            return true;
+        }
+
+        /**
          * Adapter 항목 갱신
          **/
         private void updateList() {
+            clearFavor(mItemList);
             fragment.getAdapter().setItemList(mItemList);
             fragment.getAdapter().notifyDataSetChanged();
             // TODO: 2019-11-22 왜 position 초기화는 안될까?
 //            mLayoutManager.scrollToPosition(0);
         }
+
+        /**
+         * Uncheck All Favor
+         */
+        private void clearFavor(List<FileItem> itemList) {
+            for (FileItem item : itemList) {
+                if (item.isFavored()) {
+                    item.setFavored(false);
+                }
+            }
+        }
     }
 
-    public FolderTask getAsyncTask(FileListFragment fragment) {
-        return new FolderTask(fragment);
+    public FileTask getAsyncTask(FileListFragment fragment) {
+        return new FileTask(fragment);
     }
 }
