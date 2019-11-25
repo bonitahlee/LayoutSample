@@ -145,6 +145,21 @@ public class FileFunction {
         return file != null && file.exists() && !file.getAbsolutePath().equals(topPath);
     }
 
+    /**
+     * 즐겨찾기 선택된 아이템들의 항목을 반환
+     */
+    public List<FileItem> getFavoredList() {
+        List<FileItem> fileItems = new ArrayList<>();
+
+        for (FileItem item : mItemList) {
+            if (item.isFavored()) {
+                fileItems.add(item);
+            }
+        }
+
+        return fileItems;
+    }
+
     ////// TODO: 2019-11-07 feedback: fileEventHandler로 대체
 
     /**

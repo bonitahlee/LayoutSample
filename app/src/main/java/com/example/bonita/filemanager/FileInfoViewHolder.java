@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.bonita.filemanager.define.FileManagerDefine;
+
 /**
  * item에 관한 정보를 담고있는 holder. (재사용 하기 위해 추가)
  */
@@ -31,28 +33,75 @@ public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.
         view.setOnClickListener(this);
     }
 
+    /**
+     * item을 view에 binding
+     */
+    public void bind(FileItem item) {
+        // set [file date, file size, image favor] visibility
+        setViewVisibility(item);
+
+        // textView imageView 구성
+        setTextAndImage(item);
+
+        // image_favor selector 구현
+        addFavorSelector(item);
+    }
+
+    /**
+     * 경우에 따라 [파일 날짜, 파일 사이즈, 즐겨찾기 이미지]를 보이거나 숨기도록 설정
+     */
+    private void setViewVisibility(FileItem item) {
+        if (item.getFileName().equals(FileManagerDefine.UPPER_FOLDER)) {
+            // 상위 폴더 이동 (..)에는 file date, file size를 안보이도록
+            fileDateTv.setVisibility(View.GONE);
+            fileSizeTv.setVisibility(View.GONE);
+            favorImage.setVisibility(View.GONE);
+        } else if (item.isDir()) {
+            // 폴더일 경우에는 file date 만 안보이도록
+            fileDateTv.setVisibility(View.VISIBLE);
+            fileSizeTv.setVisibility(View.GONE);
+            favorImage.setVisibility(View.VISIBLE);
+        } else {
+            // 그 외의 경우에는 다보이도록
+            fileDateTv.setVisibility(View.VISIBLE);
+            fileSizeTv.setVisibility(View.VISIBLE);
+            favorImage.setVisibility(View.VISIBLE);
+        }
+
+        // 즐겨찾기 선택된 item만 select된 상태로 표시
+        if (item.isFavored()) {
+            favorImage.setSelected(true);
+        } else {
+            favorImage.setSelected(false);
+        }
+    }
+
+    /**
+     * 파일이름, 파일날짜, 파일크기, 파일아이콘 의 text와 image resource를 설정
+     */
+    private void setTextAndImage(FileItem item) {
+        fileNameTv.setText(item.getFileName());
+        fileDateTv.setText(item.getFileDate());
+        fileSizeTv.setText(item.getFileSize());
+        fileImage.setImageResource(item.getImageResId());
+    }
+
+    /**
+     * R.id.image_favor이 selector [image는 selected되었는지 기억 못하므로 code로 추가]
+     */
+    private void addFavorSelector(final FileItem item) {
+        favorImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean selected = view.isSelected();
+                view.setSelected(!selected);
+                item.setFavored(!selected);
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
         mClickListener.onClick(v, getAdapterPosition());
-    }
-
-    public TextView getFileNameTv() {
-        return fileNameTv;
-    }
-
-    public TextView getFileDateTv() {
-        return fileDateTv;
-    }
-
-    public TextView getFileSizeTv() {
-        return fileSizeTv;
-    }
-
-    public ImageView getFileImage() {
-        return fileImage;
-    }
-
-    public ImageView getFavorImage() {
-        return favorImage;
     }
 }
