@@ -13,23 +13,23 @@ import android.view.ViewGroup;
 import com.example.bonita.filemanager.define.FileManagerDefine;
 import com.example.bonita.filemanager.widget.FileArrayAdapter;
 
-////// TODO: 2019-11-07 FileAdapter를 들고있어야 할까?
+import java.util.List;
 
 /**
  * 파일들의 ListView을 보여주는 Fragment
  */
-public class FileListFragment extends Fragment {
+public class FileListFragment extends Fragment implements AsyncCallback {
     private final String TAG = "FilListFragment";
 
-    private FileArrayAdapter mFileAdapter;
     private LinearLayoutManager mLayoutManager;
-
+    private FileArrayAdapter mFileAdapter;
     private FileFunction mFileFunction;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFileFunction = new FileFunction();
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mFileFunction = new FileFunction(this);
     }
 
     @Override
@@ -46,7 +46,6 @@ public class FileListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
 
         // initialize adapter
@@ -88,7 +87,31 @@ public class FileListFragment extends Fragment {
         return false;
     }
 
-    public FileArrayAdapter getAdapter() {
-        return mFileAdapter;
+    @Override
+    public void onListUpdated(List<FileItem> itemList) {
+        // FileOperatorTask에서 콜백받는 부분
+        updateList(itemList);
+    }
+
+    /**
+     * Adapter 항목 갱신
+     **/
+    private void updateList(List<FileItem> itemList) {
+        clearFavor(itemList);
+        mFileAdapter.setItemList(itemList);
+        mFileAdapter.notifyDataSetChanged();
+        // TODO: 2019-11-22 왜 position 초기화는 안될까?
+        mLayoutManager.scrollToPosition(0);
+    }
+
+    /**
+     * Uncheck All Favor
+     */
+    private void clearFavor(List<FileItem> itemList) {
+        for (FileItem item : itemList) {
+            if (item.isFavored()) {
+                item.setFavored(false);
+            }
+        }
     }
 }

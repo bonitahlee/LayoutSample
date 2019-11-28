@@ -1,11 +1,8 @@
-package com.example.bonita.filemanager.event;
+package com.example.bonita.filemanager;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
+import android.os.AsyncTask;
 
-import com.example.bonita.filemanager.FileItem;
+import com.example.bonita.filemanager.define.FileEvent;
 import com.example.bonita.filemanager.define.FileManagerDefine;
 
 import java.io.File;
@@ -14,35 +11,58 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * FileEvent 처리를 위한 Handler
+ * 파일/폴더 관련 operator를 수행하는 비동기 태스크
  */
-public class FileEventHandler extends Handler {
-    private final String TAG = "FileEventHandler";
-    private List<FileItem> mItemList;
+public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
+    private final String TAG = "FileOperatorTask";
 
-    public FileEventHandler() {
-        mItemList = new ArrayList<>();
+    private List<FileItem> mItemList;
+    private AsyncCallback mCallBack;
+
+    // // TODO: 2019-11-26 FileListFragment에 있는 fragment를 갖고와서 써야하나?
+/*    private ProgressDialog dialog;
+    private FileListFragment fragment;*/
+
+    public FileOperatorTask(AsyncCallback callback, List<FileItem> itemList) {
+        this.mCallBack = callback;
+        mItemList = itemList;
     }
 
     @Override
-    public void handleMessage(Message msg) {
-        Log.e(TAG, String.valueOf(msg.what));
+    protected void onPreExecute() {
+        super.onPreExecute();
+//        Log.e(TAG, "pre");
+        /*dialog = new ProgressDialog(fragment.getActivity());
+        dialog.setMessage(fragment.getString(R.string.MSG_LOADING));
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(true);
+        dialog.show();*/
+    }
 
-        Bundle bundle = msg.getData();
-
-        switch (msg.what) {
+    @Override
+    protected Boolean doInBackground(Object... params) {
+//        Log.e(TAG, "doin");
+        switch ((int) params[0]) {
+            // 폴더 열기
             case FileEvent.OPEN_FOLDER:
-                if (openFolder(bundle.getString("FILE_PATH"))) {
-                    // update list
-                }
-                break;
+                return openFolder((String) params[1]);
+            // 파일 삭제
             case FileEvent.DELETE_FILE:
-                if (deleteFile()) {
-                    // update list
-                }
-                break;
+                return deleteFile();
             default:
-                break;
+                return false;
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Boolean result) {
+        super.onPostExecute(result);
+//        Log.e(TAG, "post");
+//        dialog.dismiss();
+
+        if (result) {
+            // mItemList가 변경되었을 때에만 list update 하도록
+            mCallBack.onListUpdated(mItemList);
         }
     }
 
@@ -88,7 +108,7 @@ public class FileEventHandler extends Handler {
             }
         }
 
-        // 삭제할 항목이 없을 때의 예외처리
+        // // TODO: 2019-11-28 추후 삭제할 항목이 없을 때의 예외처리 필요
         if (iDeleteCount == 0) {
             return false;
         }
@@ -173,28 +193,5 @@ public class FileEventHandler extends Handler {
     private boolean isExist(File file) {
         String topPath = new File(FileManagerDefine.PATH_ROOT).getParent();
         return file != null && file.exists() && !file.getAbsolutePath().equals(topPath);
-    }
-
-
-    /**
-     * Adapter 항목 갱신
-     **/
-    private void updateList() {
-        clearFavor(mItemList);
-       /* fragment.getAdapter().setItemList(mItemList);
-        fragment.getAdapter().notifyDataSetChanged();*/
-        // TODO: 2019-11-22 왜 position 초기화는 안될까?
-//            mLayoutManager.scrollToPosition(0);
-    }
-
-    /**
-     * Uncheck All Favor
-     */
-    private void clearFavor(List<FileItem> itemList) {
-        for (FileItem item : itemList) {
-            if (item.isFavored()) {
-                item.setFavored(false);
-            }
-        }
     }
 }

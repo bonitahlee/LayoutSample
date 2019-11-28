@@ -1,4 +1,4 @@
-package com.example.bonita.filemanager.event;
+package com.example.bonita.filemanager.define;
 
 /**
  * 폴더 및 파일 관련 event

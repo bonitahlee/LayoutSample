@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by bonita.h.lee on 2019-08-29.
- * FileArrayAdapter
+ * FileItem data를 받아 FileListFragment로 뿌려주는 class
  */
 
 public class FileArrayAdapter extends RecyclerView.Adapter<FileInfoViewHolder> {
