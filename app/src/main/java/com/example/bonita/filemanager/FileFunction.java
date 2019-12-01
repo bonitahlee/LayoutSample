@@ -13,10 +13,10 @@ import java.util.List;
  */
 public class FileFunction {
 
-    private AsyncCallback mCallBack;
+    private RefreshListListener mCallBack;
     private List<FileItem> mItemList;
 
-    public FileFunction(AsyncCallback callback) {
+    public FileFunction(RefreshListListener callback) {
         mCallBack = callback;
         mItemList = new ArrayList<>();
     }
@@ -49,7 +49,7 @@ public class FileFunction {
      */
     public void openFolder(String filePath) {
         Object[] objects = new Object[]{FileEvent.OPEN_FOLDER, filePath};
-        new FileOperatorTask(mCallBack, mItemList).execute(objects);
+        new FileOperatorTask(mItemList, mCallBack).execute(objects);
     }
 
     /**
@@ -57,6 +57,13 @@ public class FileFunction {
      */
     public void deleteFile() {
         Object[] objects = new Object[]{FileEvent.DELETE_FILE, null};
-        new FileOperatorTask(mCallBack, mItemList).execute(objects);
+        new FileOperatorTask(mItemList, mCallBack).execute(objects);
+    }
+
+    /**
+     * FileItem의 List를 반환
+     */
+    public List<FileItem> getItemList() {
+        return mItemList;
     }
 }

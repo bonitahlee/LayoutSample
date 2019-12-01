@@ -17,15 +17,15 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
     private final String TAG = "FileOperatorTask";
 
     private List<FileItem> mItemList;
-    private AsyncCallback mCallBack;
+    private RefreshListListener mCallBack;
 
     // // TODO: 2019-11-26 FileListFragment에 있는 fragment를 갖고와서 써야하나?
 /*    private ProgressDialog dialog;
     private FileListFragment fragment;*/
 
-    public FileOperatorTask(AsyncCallback callback, List<FileItem> itemList) {
-        this.mCallBack = callback;
+    public FileOperatorTask(List<FileItem> itemList, RefreshListListener callback) {
         mItemList = itemList;
+        this.mCallBack = callback;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
 
         if (result) {
             // mItemList가 변경되었을 때에만 list update 하도록
-            mCallBack.onListUpdated(mItemList);
+            mCallBack.onListUpdated();
         }
     }
 
@@ -74,7 +74,7 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
      */
     private boolean openFolder(String path) {
         File file = new File(path);
-        if (!isExist(file)) {
+        if (!isMovable(file)) {
             // 이동하려는 폴더(상위 폴더로 이동일 때) 또는 현재 폴더(하위 폴더로 이동일 때)가 존재할 때에만 이동
             return false;
         }
@@ -101,7 +101,7 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
             }
 
             File file = new File(item.getFilePath());
-            if (isExist(file)) {
+            if (isMovable(file)) {
                 iterator.remove();
                 file.delete();
                 iDeleteCount++;
@@ -123,9 +123,9 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
     private List<FileItem> getFileList(String path) {
         File directory = new File(path);   // 폴더 경로
 
-        if (!directory.exists() && directory.isDirectory()) {
-            // 20191009. directory가 존재하지 않을 때에는 폴더를 만들어 줘야함
-            directory.mkdirs();
+        if (!directory.exists()) {
+            // 20191009. directory가 존재하지 않을 때에는 빈 list를 반환
+            return new ArrayList<>();
         }
 
         File[] files = directory.listFiles();
@@ -134,64 +134,27 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
             files = new File[]{};
         }
 
-        return addFileItemList(path, files);
-    }
-
-    /**
-     * FileItem List에 항목을 추가하여 반환
-     *
-     * @param path  하위 항목을 가져올 경로
-     * @param files path 폴더의 하위항목들
-     * @return path폴더의 하위 항목(폴더/파일들)
-     */
-    private List<FileItem> addFileItemList(String path, File[] files) {
         List<FileItem> fileList = new ArrayList<>();     // 폴더 + 파일을 담는 list
-        List<FileItem> onlyFileList = new ArrayList<>();  // file을 폴더 밑에 정렬하기 위해 파일만 담는 list 생성
-
-        ////// TODO: 2019-11-07 추후에 sorting관련해서 변경 예정
-        // 폴더를 먼저 정렬하기 위해, 파일만 따로 구분한 뒤 나중에 fileList로 합쳐줌
         for (File file : files) {
-            if (file.isDirectory()) {
-                addFileItem(fileList, file);
-            } else {
-                addFileItem(onlyFileList, file);
-            }
+            fileList.add(new FileItem(file.getAbsolutePath(), file.getName(), file.lastModified(), file.length(), file.isDirectory()));
         }
-        fileList.addAll(onlyFileList);
 
         File parent = new File(path).getParentFile();
-        if (isExist(parent)) {
+        if (isMovable(parent)) {
             // 상위 경로가 존재할 때 추가
-            fileList.add(0, new FileItem(
-                    parent.getAbsolutePath(),
-                    FileManagerDefine.UPPER_FOLDER,
-                    0,
-                    0,
-                    true));
+            fileList.add(0, new FileItem(parent.getAbsolutePath(), FileManagerDefine.UPPER_FOLDER, 0, 0, true));
         }
         return fileList;
     }
 
     /**
-     * 매개변수로 넘어온 list에 FileItem을 생성하여 넣어줌
-     */
-    private void addFileItem(List<FileItem> list, File file) {
-        list.add(new FileItem(
-                file.getAbsolutePath(),
-                file.getName(),
-                file.lastModified(),
-                file.length(),
-                file.isDirectory()));
-    }
-
-    /**
-     * 이동하려는 경로가 존재하는지 확인(최상위폴더는 제외)
+     * 해당 경로로 이동가능한지 확인 (최상위폴더는 제외)
      *
      * @param file 이동하려는 파일
      * @return true: 이동 가능, false: 이동 불가(최상위 폴더일 경우)
      */
-    private boolean isExist(File file) {
-        String topPath = new File(FileManagerDefine.PATH_ROOT).getParent();
-        return file != null && file.exists() && !file.getAbsolutePath().equals(topPath);
+    private boolean isMovable(File file) {
+        String parent = new File(FileManagerDefine.PATH_ROOT).getParent();
+        return file != null && file.exists() && !file.getAbsolutePath().equals(parent);
     }
 }

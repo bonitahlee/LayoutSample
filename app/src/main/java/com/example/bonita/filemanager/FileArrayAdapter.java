@@ -1,16 +1,10 @@
-package com.example.bonita.filemanager.widget;
+package com.example.bonita.filemanager;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.bonita.filemanager.FileAdapterClickListener;
-import com.example.bonita.filemanager.FileInfoViewHolder;
-import com.example.bonita.filemanager.FileItem;
-import com.example.bonita.filemanager.R;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,8 +15,8 @@ public class FileArrayAdapter extends RecyclerView.Adapter<FileInfoViewHolder> {
     private List<FileItem> mItemList;
     private FileAdapterClickListener mClickListener;
 
-    public FileArrayAdapter(FileAdapterClickListener listener) {
-        mItemList = new ArrayList<>();
+    public FileArrayAdapter(List<FileItem> itemList, FileAdapterClickListener listener) {
+        mItemList = itemList;
         mClickListener = listener;
     }
 
@@ -52,14 +46,5 @@ public class FileArrayAdapter extends RecyclerView.Adapter<FileInfoViewHolder> {
     @Override
     public int getItemCount() {
         return mItemList.size();
-    }
-
-    /**
-     * adapter의 itemList를 변경
-     *
-     * @param list 변경될 list
-     */
-    public void setItemList(List<FileItem> list) {
-        mItemList = list;
     }
 }

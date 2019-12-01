@@ -11,14 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
-import com.example.bonita.filemanager.widget.FileArrayAdapter;
-
-import java.util.List;
 
 /**
- * 파일들의 ListView을 보여주는 Fragment
+ * 파일목록을 보여주는 Fragment
  */
-public class FileListFragment extends Fragment implements AsyncCallback {
+public class FileListFragment extends Fragment implements RefreshListListener {
     private final String TAG = "FilListFragment";
 
     private LinearLayoutManager mLayoutManager;
@@ -49,7 +46,7 @@ public class FileListFragment extends Fragment implements AsyncCallback {
         recyclerView.setLayoutManager(mLayoutManager);
 
         // initialize adapter
-        mFileAdapter = new FileArrayAdapter(new FileAdapterClickListener() {
+        mFileAdapter = new FileArrayAdapter(mFileFunction.getItemList(), new FileAdapterClickListener() {
             @Override
             public void onClick(View view, int position) {
                 // Adapter 의 항목을 선택했을 경우 키 처리
@@ -76,6 +73,12 @@ public class FileListFragment extends Fragment implements AsyncCallback {
         mFileFunction.openFolder(FileManagerDefine.PATH_ROOT);
     }
 
+    @Override
+    public void onListUpdated() {
+        // FileOperatorTask에서 콜백받는 부분
+        updateList();
+    }
+
     /**
      * 키 이벤트 처리
      */
@@ -87,31 +90,12 @@ public class FileListFragment extends Fragment implements AsyncCallback {
         return false;
     }
 
-    @Override
-    public void onListUpdated(List<FileItem> itemList) {
-        // FileOperatorTask에서 콜백받는 부분
-        updateList(itemList);
-    }
-
     /**
      * Adapter 항목 갱신
      **/
-    private void updateList(List<FileItem> itemList) {
-        clearFavor(itemList);
-        mFileAdapter.setItemList(itemList);
+    private void updateList() {
         mFileAdapter.notifyDataSetChanged();
         // TODO: 2019-11-22 왜 position 초기화는 안될까?
         mLayoutManager.scrollToPosition(0);
-    }
-
-    /**
-     * Uncheck All Favor
-     */
-    private void clearFavor(List<FileItem> itemList) {
-        for (FileItem item : itemList) {
-            if (item.isFavored()) {
-                item.setFavored(false);
-            }
-        }
     }
 }

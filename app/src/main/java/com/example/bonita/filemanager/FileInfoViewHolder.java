@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.example.bonita.filemanager.define.FileManagerDefine;
 
 /**
- * item에 관한 정보를 담고있는 holder. (재사용 하기 위해 추가)
+ * ViewHolder
  */
 public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -33,6 +33,11 @@ public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.
         view.setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        mClickListener.onClick(v, getAdapterPosition());
+    }
+
     /**
      * item을 view에 binding
      */
@@ -40,11 +45,11 @@ public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.
         // set [file date, file size, image favor] visibility
         setViewVisibility(item);
 
-        // textView imageView 구성
+        // set textView & imageView
         setTextAndImage(item);
 
-        // image_favor selector 구현
-        addFavorSelector(item);
+        // set selection of image_favor
+        setFavorImage(item);
     }
 
     /**
@@ -67,13 +72,6 @@ public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.
             fileSizeTv.setVisibility(View.VISIBLE);
             favorImage.setVisibility(View.VISIBLE);
         }
-
-        // 즐겨찾기 선택된 item만 select된 상태로 표시
-        if (item.isFavored()) {
-            favorImage.setSelected(true);
-        } else {
-            favorImage.setSelected(false);
-        }
     }
 
     /**
@@ -87,9 +85,9 @@ public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     /**
-     * R.id.image_favor이 selector [image는 selected되었는지 기억 못하므로 code로 추가]
+     * R.id.image_favor이 selector [image는 selected되었는지 기억 못하므로 code로 추가]0
      */
-    private void addFavorSelector(final FileItem item) {
+    private void setFavorImage(final FileItem item) {
         favorImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,10 +96,12 @@ public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.
                 item.setFavored(!selected);
             }
         });
-    }
 
-    @Override
-    public void onClick(View v) {
-        mClickListener.onClick(v, getAdapterPosition());
+        // 즐겨찾기 선택된 item만 select된 상태로 표시
+        if (item.isFavored()) {
+            favorImage.setSelected(true);
+        } else {
+            favorImage.setSelected(false);
+        }
     }
 }

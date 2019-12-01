@@ -12,7 +12,8 @@ import android.widget.Toast;
 import com.example.bonita.filemanager.define.FileManagerDefine;
 
 /**
- * storage에 접근할 수 있는 권한을 확인 후, FileListFragment를 띄움
+ * MainActivity
+ * - storage에 접근할 수 있는 권한을 확인 후, FileListFragment를 띄움
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -29,46 +30,6 @@ public class MainActivity extends AppCompatActivity {
             // storage 권한이 있다면 fragment를 띄움
             attachFragment();
         }
-    }
-
-    /**
-     * attach FileListFragment
-     */
-    private void attachFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.layout_main, mFileListFragment).commit();
-    }
-
-    /**
-     * Storage 경로에 읽고 쓰는 권한이 있는지 확인 후 요청
-     *
-     * @return true: 권한 있음, false: 권한 없음->요청 intent 보냄
-     */
-    public boolean hasStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!hasPermission(FileManagerDefine.EXTERNAL_PERMS)) {
-                requestPermissions(FileManagerDefine.EXTERNAL_PERMS, FileManagerDefine.EXTERNAL_REQUEST);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * parameter로 넘어온 권한들이 있는지 확인
-     */
-    private boolean hasPermission(String[] perms) {
-        return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, perms[0])
-                && PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, perms[1]));
-
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (mFileListFragment.onKeyUp(keyCode)) {
-            return true;
-        }
-        return super.onKeyUp(keyCode, event);
     }
 
     /**
@@ -94,5 +55,45 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (mFileListFragment.onKeyUp(keyCode)) {
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    /**
+     * attach FileListFragment
+     */
+    private void attachFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.layout_main, mFileListFragment).commit();
+    }
+
+    /**
+     * Storage 경로에 읽고 쓰는 권한이 있는지 확인 후 요청
+     *
+     * @return true: 권한 있음, false: 권한 없음->요청 intent 보냄
+     */
+    private boolean hasStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!hasPermission(FileManagerDefine.EXTERNAL_PERMS)) {
+                requestPermissions(FileManagerDefine.EXTERNAL_PERMS, FileManagerDefine.EXTERNAL_REQUEST);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * parameter로 넘어온 권한들이 있는지 확인
+     */
+    private boolean hasPermission(String[] perms) {
+        return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, perms[0])
+                && PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, perms[1]));
+
     }
 }
