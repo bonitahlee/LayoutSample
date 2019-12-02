@@ -12,7 +12,7 @@ import com.example.bonita.filemanager.define.FileManagerDefine;
  */
 public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private FileAdapterClickListener mClickListener;
+    private NotifyListener mClickListener;
 
     private TextView fileNameTv;
     private TextView fileDateTv;
@@ -20,7 +20,7 @@ public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.
     private ImageView fileImage;
     private ImageView favorImage;
 
-    public FileInfoViewHolder(View view, FileAdapterClickListener listener) {
+    public FileInfoViewHolder(View view, NotifyListener listener) {
         super(view);
         fileNameTv = view.findViewById(R.id.tv_file_name);
         fileDateTv = view.findViewById(R.id.tv_file_date);

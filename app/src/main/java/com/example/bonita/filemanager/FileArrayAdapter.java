@@ -13,11 +13,11 @@ import java.util.List;
 
 public class FileArrayAdapter extends RecyclerView.Adapter<FileInfoViewHolder> {
     private List<FileItem> mItemList;
-    private FileAdapterClickListener mClickListener;
+    private NotifyListener mListener;
 
-    public FileArrayAdapter(List<FileItem> itemList, FileAdapterClickListener listener) {
+    public FileArrayAdapter(List<FileItem> itemList, NotifyListener listener) {
         mItemList = itemList;
-        mClickListener = listener;
+        mListener = listener;
     }
 
     /**
@@ -27,7 +27,7 @@ public class FileArrayAdapter extends RecyclerView.Adapter<FileInfoViewHolder> {
     @Override
     public FileInfoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_text_item, parent, false);
-        return new FileInfoViewHolder(view, mClickListener);
+        return new FileInfoViewHolder(view, mListener);
     }
 
     /**

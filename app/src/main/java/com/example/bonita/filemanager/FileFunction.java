@@ -13,10 +13,10 @@ import java.util.List;
  */
 public class FileFunction {
 
-    private RefreshListListener mCallBack;
+    private NotifyListener mCallBack;
     private List<FileItem> mItemList;
 
-    public FileFunction(RefreshListListener callback) {
+    public FileFunction(NotifyListener callback) {
         mCallBack = callback;
         mItemList = new ArrayList<>();
     }

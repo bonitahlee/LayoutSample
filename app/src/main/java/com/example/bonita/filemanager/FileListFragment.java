@@ -15,9 +15,10 @@ import com.example.bonita.filemanager.define.FileManagerDefine;
 /**
  * 파일목록을 보여주는 Fragment
  */
-public class FileListFragment extends Fragment implements RefreshListListener {
+public class FileListFragment extends Fragment {
     private final String TAG = "FilListFragment";
 
+    private NotifyListener mListener;
     private LinearLayoutManager mLayoutManager;
     private FileArrayAdapter mFileAdapter;
     private FileFunction mFileFunction;
@@ -25,8 +26,29 @@ public class FileListFragment extends Fragment implements RefreshListListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mListener = new NotifyListener() {
+            @Override
+            public void onClick(View view, int position) {
+                // Adapter 의 항목을 선택했을 경우 키 처리
+                FileItem item = mFileAdapter.getItem(position);
+                String filePath = item.getFilePath();
+
+                if (item.isDir()) {
+                    // 상위/하위 폴더로 진입
+                    mFileFunction.openFolder(filePath);
+                } else {
+                    // 파일 열기
+                    mFileFunction.openFile(FileListFragment.this, filePath);
+                }
+            }
+
+            @Override
+            public void onTaskCompleted() {
+                updateList();
+            }
+        };
         mLayoutManager = new LinearLayoutManager(getContext());
-        mFileFunction = new FileFunction(this);
+        mFileFunction = new FileFunction(mListener);
     }
 
     @Override
@@ -46,22 +68,7 @@ public class FileListFragment extends Fragment implements RefreshListListener {
         recyclerView.setLayoutManager(mLayoutManager);
 
         // initialize adapter
-        mFileAdapter = new FileArrayAdapter(mFileFunction.getItemList(), new FileAdapterClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                // Adapter 의 항목을 선택했을 경우 키 처리
-                FileItem item = mFileAdapter.getItem(position);
-                String filePath = item.getFilePath();
-
-                if (item.isDir()) {
-                    // 상위/하위 폴더로 진입
-                    mFileFunction.openFolder(filePath);
-                } else {
-                    // 파일 열기
-                    mFileFunction.openFile(FileListFragment.this, filePath);
-                }
-            }
-        });
+        mFileAdapter = new FileArrayAdapter(mFileFunction.getItemList(), mListener);
         recyclerView.setAdapter(mFileAdapter);
     }
 
@@ -71,12 +78,6 @@ public class FileListFragment extends Fragment implements RefreshListListener {
 
         // show file list
         mFileFunction.openFolder(FileManagerDefine.PATH_ROOT);
-    }
-
-    @Override
-    public void onListUpdated() {
-        // FileOperatorTask에서 콜백받는 부분
-        updateList();
     }
 
     /**

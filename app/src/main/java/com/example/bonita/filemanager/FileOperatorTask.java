@@ -17,13 +17,13 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
     private final String TAG = "FileOperatorTask";
 
     private List<FileItem> mItemList;
-    private RefreshListListener mCallBack;
+    private NotifyListener mCallBack;
 
     // // TODO: 2019-11-26 FileListFragment에 있는 fragment를 갖고와서 써야하나?
 /*    private ProgressDialog dialog;
     private FileListFragment fragment;*/
 
-    public FileOperatorTask(List<FileItem> itemList, RefreshListListener callback) {
+    public FileOperatorTask(List<FileItem> itemList, NotifyListener callback) {
         mItemList = itemList;
         this.mCallBack = callback;
     }
@@ -62,7 +62,7 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
 
         if (result) {
             // mItemList가 변경되었을 때에만 list update 하도록
-            mCallBack.onListUpdated();
+            mCallBack.onTaskCompleted();
         }
     }
 
