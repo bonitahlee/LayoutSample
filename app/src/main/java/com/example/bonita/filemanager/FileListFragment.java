@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
+import com.example.bonita.filemanager.listener.NotifyListener;
 
 /**
  * 파일목록을 보여주는 Fragment
+ * // TODO: 2019-12-03 추후에 package 구분 예정
  */
 public class FileListFragment extends Fragment {
     private final String TAG = "FilListFragment";

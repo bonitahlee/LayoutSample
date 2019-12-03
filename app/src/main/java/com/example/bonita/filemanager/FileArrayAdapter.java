@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.bonita.filemanager.listener.NotifyListener;
+
 import java.util.List;
 
 /**
  * FileItem data를 받아 FileListFragment로 뿌려주는 class
+ * // TODO: 2019-12-03 추후에 package 구분 예정
  */
 
 public class FileArrayAdapter extends RecyclerView.Adapter<FileInfoViewHolder> {

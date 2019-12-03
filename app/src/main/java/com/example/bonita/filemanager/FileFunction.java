@@ -4,12 +4,15 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 
 import com.example.bonita.filemanager.define.FileEvent;
+import com.example.bonita.filemanager.listener.NotifyListener;
+import com.example.bonita.filemanager.util.FileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * File operator 관련 class (파일 열기, 폴더 상/하위 이동, 삭제 등..)
+ * // TODO: 2019-12-03 추후에 package 구분 예정
  */
 public class FileFunction {
 

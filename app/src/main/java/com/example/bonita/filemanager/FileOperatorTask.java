@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.example.bonita.filemanager.define.FileEvent;
 import com.example.bonita.filemanager.define.FileManagerDefine;
+import com.example.bonita.filemanager.listener.NotifyListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.ListIterator;
 
 /**
  * 파일/폴더 관련 operator를 수행하는 비동기 태스크
+ * // TODO: 2019-12-03 추후에 package 구분 예정
  */
 public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
     private final String TAG = "FileOperatorTask";

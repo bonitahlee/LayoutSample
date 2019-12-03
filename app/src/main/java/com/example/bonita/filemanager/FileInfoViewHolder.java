@@ -6,9 +6,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
+import com.example.bonita.filemanager.listener.NotifyListener;
 
 /**
  * ViewHolder
+ * // TODO: 2019-12-03 추후에 package 구분 예정
  */
 public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -85,7 +87,7 @@ public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     /**
-     * R.id.image_favor이 selector [image는 selected되었는지 기억 못하므로 code로 추가]0
+     * R.id.image_favor이 selector [image는 selected되었는지 기억 못하므로 code로 추가]
      */
     private void setFavorImage(final FileItem item) {
         favorImage.setOnClickListener(new View.OnClickListener() {
