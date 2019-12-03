@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.bonita.filemanager.listener.ItemClickListener;
+import com.example.bonita.filemanager.listener.FileManagerListener;
 
 import java.util.List;
 
@@ -15,9 +15,9 @@ import java.util.List;
 
 public class FileArrayAdapter extends RecyclerView.Adapter<FileInfoViewHolder> {
     private List<FileItem> mItemList;
-    private ItemClickListener mClickListener;
+    private FileManagerListener.ItemClickListener mClickListener;
 
-    public FileArrayAdapter(List<FileItem> itemList, ItemClickListener listener) {
+    public FileArrayAdapter(List<FileItem> itemList, FileManagerListener.ItemClickListener listener) {
         mItemList = itemList;
         mClickListener = listener;
     }

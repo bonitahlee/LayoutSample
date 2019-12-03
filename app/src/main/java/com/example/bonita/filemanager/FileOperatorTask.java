@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import com.example.bonita.filemanager.define.FileEvent;
 import com.example.bonita.filemanager.define.FileManagerDefine;
-import com.example.bonita.filemanager.listener.ItemClickListener;
+import com.example.bonita.filemanager.listener.FileManagerListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,9 +18,9 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
     private final String TAG = "FileOperatorTask";
 
     private List<FileItem> mItemList;
-    private ItemClickListener.TaskListener mCallBack;
+    private FileManagerListener.TaskListener mCallBack;
 
-    public FileOperatorTask(List<FileItem> itemList, ItemClickListener.TaskListener callback) {
+    public FileOperatorTask(List<FileItem> itemList, FileManagerListener.TaskListener callback) {
         mItemList = itemList;
         this.mCallBack = callback;
     }

@@ -4,7 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 
 import com.example.bonita.filemanager.define.FileEvent;
-import com.example.bonita.filemanager.listener.ItemClickListener;
+import com.example.bonita.filemanager.listener.FileManagerListener;
 import com.example.bonita.filemanager.util.FileUtils;
 
 import java.util.ArrayList;
@@ -15,10 +15,10 @@ import java.util.List;
  */
 public class FileFunction {
 
-    private ItemClickListener.TaskListener mCallBack;
+    private FileManagerListener.TaskListener mCallBack;
     private List<FileItem> mItemList;
 
-    public FileFunction(ItemClickListener.TaskListener callback) {
+    public FileFunction(FileManagerListener.TaskListener callback) {
         mCallBack = callback;
         mItemList = new ArrayList<>();
     }

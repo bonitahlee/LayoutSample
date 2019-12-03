@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
-import com.example.bonita.filemanager.listener.ItemClickListener;
+import com.example.bonita.filemanager.listener.FileManagerListener;
 
 /**
  * 파일목록을 보여주는 Fragment
@@ -27,7 +27,7 @@ public class FileListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mFileFunction = new FileFunction(new ItemClickListener.TaskListener() {
+        mFileFunction = new FileFunction(new FileManagerListener.TaskListener() {
             @Override
             public void onTaskCompleted() {
                 // FileOperatorTask에서 콜백받는 부분
@@ -54,7 +54,7 @@ public class FileListFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
 
         // initialize adapter
-        mFileAdapter = new FileArrayAdapter(mFileFunction.getItemList(), new ItemClickListener() {
+        mFileAdapter = new FileArrayAdapter(mFileFunction.getItemList(), new FileManagerListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
                 // Adapter 의 항목을 선택했을 경우 키 처리
