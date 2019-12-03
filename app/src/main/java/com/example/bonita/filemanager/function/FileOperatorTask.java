@@ -1,9 +1,10 @@
-package com.example.bonita.filemanager;
+package com.example.bonita.filemanager.function;
 
 import android.os.AsyncTask;
 
 import com.example.bonita.filemanager.define.FileEvent;
 import com.example.bonita.filemanager.define.FileManagerDefine;
+import com.example.bonita.filemanager.item.FileItem;
 import com.example.bonita.filemanager.listener.FileManagerListener;
 
 import java.io.File;

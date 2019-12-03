@@ -1,9 +1,11 @@
-package com.example.bonita.filemanager;
+package com.example.bonita.filemanager.function;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 
+import com.example.bonita.filemanager.FileListFragment;
 import com.example.bonita.filemanager.define.FileEvent;
+import com.example.bonita.filemanager.item.FileItem;
 import com.example.bonita.filemanager.listener.FileManagerListener;
 import com.example.bonita.filemanager.util.FileUtils;
 

@@ -1,4 +1,4 @@
-package com.example.bonita.filemanager
+package com.example.bonita.filemanager.item
 
 import com.example.bonita.filemanager.util.FileUtils
 

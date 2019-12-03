@@ -10,7 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.bonita.filemanager.adapter.FileArrayAdapter;
 import com.example.bonita.filemanager.define.FileManagerDefine;
+import com.example.bonita.filemanager.function.FileFunction;
+import com.example.bonita.filemanager.item.FileItem;
 import com.example.bonita.filemanager.listener.FileManagerListener;
 
 /**

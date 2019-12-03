@@ -1,10 +1,12 @@
-package com.example.bonita.filemanager;
+package com.example.bonita.filemanager.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.bonita.filemanager.R;
+import com.example.bonita.filemanager.item.FileItem;
 import com.example.bonita.filemanager.listener.FileManagerListener;
 
 import java.util.List;

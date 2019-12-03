@@ -1,11 +1,13 @@
-package com.example.bonita.filemanager;
+package com.example.bonita.filemanager.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.bonita.filemanager.R;
 import com.example.bonita.filemanager.define.FileManagerDefine;
+import com.example.bonita.filemanager.item.FileItem;
 import com.example.bonita.filemanager.listener.FileManagerListener;
 
 /**
