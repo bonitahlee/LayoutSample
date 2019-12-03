@@ -6,15 +6,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
-import com.example.bonita.filemanager.listener.NotifyListener;
+import com.example.bonita.filemanager.listener.ItemClickListener;
 
 /**
  * ViewHolder
- * // TODO: 2019-12-03 추후에 package 구분 예정
  */
 public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private NotifyListener mClickListener;
+    private ItemClickListener mClickListener;
 
     private TextView fileNameTv;
     private TextView fileDateTv;
@@ -22,7 +21,7 @@ public class FileInfoViewHolder extends RecyclerView.ViewHolder implements View.
     private ImageView fileImage;
     private ImageView favorImage;
 
-    public FileInfoViewHolder(View view, NotifyListener listener) {
+    public FileInfoViewHolder(View view, ItemClickListener listener) {
         super(view);
         fileNameTv = view.findViewById(R.id.tv_file_name);
         fileDateTv = view.findViewById(R.id.tv_file_date);

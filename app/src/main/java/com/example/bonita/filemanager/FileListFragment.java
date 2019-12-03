@@ -11,16 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.bonita.filemanager.define.FileManagerDefine;
-import com.example.bonita.filemanager.listener.NotifyListener;
+import com.example.bonita.filemanager.listener.ItemClickListener;
 
 /**
  * 파일목록을 보여주는 Fragment
- * // TODO: 2019-12-03 추후에 package 구분 예정
  */
 public class FileListFragment extends Fragment {
     private final String TAG = "FilListFragment";
 
-    private NotifyListener mListener;
     private LinearLayoutManager mLayoutManager;
     private FileArrayAdapter mFileAdapter;
     private FileFunction mFileFunction;
@@ -28,29 +26,14 @@ public class FileListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListener = new NotifyListener() {
-            @Override
-            public void onClick(View view, int position) {
-                // Adapter 의 항목을 선택했을 경우 키 처리
-                FileItem item = mFileAdapter.getItem(position);
-                String filePath = item.getFilePath();
 
-                if (item.isDir()) {
-                    // 상위/하위 폴더로 진입
-                    mFileFunction.openFolder(filePath);
-                } else {
-                    // 파일 열기
-                    mFileFunction.openFile(FileListFragment.this, filePath);
-                }
-            }
-
+        mFileFunction = new FileFunction(new ItemClickListener.TaskListener() {
             @Override
             public void onTaskCompleted() {
+                // FileOperatorTask에서 콜백받는 부분
                 updateList();
             }
-        };
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mFileFunction = new FileFunction(mListener);
+        });
     }
 
     @Override
@@ -67,10 +50,26 @@ public class FileListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
 
         // initialize adapter
-        mFileAdapter = new FileArrayAdapter(mFileFunction.getItemList(), mListener);
+        mFileAdapter = new FileArrayAdapter(mFileFunction.getItemList(), new ItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                // Adapter 의 항목을 선택했을 경우 키 처리
+                FileItem item = mFileAdapter.getItem(position);
+                String filePath = item.getFilePath();
+
+                if (item.isDir()) {
+                    // 상위/하위 폴더로 진입
+                    mFileFunction.openFolder(filePath);
+                } else {
+                    // 파일 열기
+                    mFileFunction.openFile(FileListFragment.this, filePath);
+                }
+            }
+        });
         recyclerView.setAdapter(mFileAdapter);
     }
 
