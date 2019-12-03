@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import com.example.bonita.filemanager.define.FileEvent;
 import com.example.bonita.filemanager.define.FileManagerDefine;
-import com.example.bonita.filemanager.listener.NotifyListener;
+import com.example.bonita.filemanager.listener.ItemClickListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,26 +19,11 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
     private final String TAG = "FileOperatorTask";
 
     private List<FileItem> mItemList;
-    private NotifyListener mCallBack;
+    private ItemClickListener mCallBack;
 
-    // // TODO: 2019-11-26 FileListFragment에 있는 fragment를 갖고와서 써야하나?
-/*    private ProgressDialog dialog;
-    private FileListFragment fragment;*/
-
-    public FileOperatorTask(List<FileItem> itemList, NotifyListener callback) {
+    public FileOperatorTask(List<FileItem> itemList, ItemClickListener callback) {
         mItemList = itemList;
         this.mCallBack = callback;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-//        Log.e(TAG, "pre");
-        /*dialog = new ProgressDialog(fragment.getActivity());
-        dialog.setMessage(fragment.getString(R.string.MSG_LOADING));
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(true);
-        dialog.show();*/
     }
 
     @Override
@@ -60,7 +45,6 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
 //        Log.e(TAG, "post");
-//        dialog.dismiss();
 
         if (result) {
             // mItemList가 변경되었을 때에만 list update 하도록
