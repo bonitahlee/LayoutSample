@@ -17,11 +17,11 @@ import java.util.List;
  */
 public class FileFunction {
 
-    private FileManagerListener.TaskListener mCallBack;
+    private FileManagerListener.TaskListener mTaskListener;
     private List<FileItem> mItemList;
 
-    public FileFunction(FileManagerListener.TaskListener callback) {
-        mCallBack = callback;
+    public FileFunction(FileManagerListener.TaskListener listener) {
+        mTaskListener = listener;
         mItemList = new ArrayList<>();
     }
 
@@ -53,7 +53,7 @@ public class FileFunction {
      */
     public void openFolder(String filePath) {
         Object[] objects = new Object[]{FileEvent.OPEN_FOLDER, filePath};
-        new FileOperatorTask(mItemList, mCallBack).execute(objects);
+        new FileOperatorTask(mItemList, mTaskListener).execute(objects);
     }
 
     /**
@@ -61,7 +61,7 @@ public class FileFunction {
      */
     public void deleteFile() {
         Object[] objects = new Object[]{FileEvent.DELETE_FILE, null};
-        new FileOperatorTask(mItemList, mCallBack).execute(objects);
+        new FileOperatorTask(mItemList, mTaskListener).execute(objects);
     }
 
     /**

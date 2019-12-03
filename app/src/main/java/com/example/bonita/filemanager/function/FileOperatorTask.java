@@ -19,11 +19,11 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
     private final String TAG = "FileOperatorTask";
 
     private List<FileItem> mItemList;
-    private FileManagerListener.TaskListener mCallBack;
+    private FileManagerListener.TaskListener mTaskListener;
 
-    public FileOperatorTask(List<FileItem> itemList, FileManagerListener.TaskListener callback) {
+    public FileOperatorTask(List<FileItem> itemList, FileManagerListener.TaskListener listener) {
         mItemList = itemList;
-        this.mCallBack = callback;
+        this.mTaskListener = listener;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
 
         if (result) {
             // mItemList가 변경되었을 때에만 list update 하도록
-            mCallBack.onTaskCompleted();
+            mTaskListener.onTaskCompleted();
         }
     }
 
