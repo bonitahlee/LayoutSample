@@ -100,7 +100,6 @@ public class FileListFragment extends Fragment {
      **/
     private void updateList() {
         mFileAdapter.notifyDataSetChanged();
-        // TODO: 2019-11-22 왜 position 초기화는 안될까?
         mLayoutManager.scrollToPosition(0);
     }
 }

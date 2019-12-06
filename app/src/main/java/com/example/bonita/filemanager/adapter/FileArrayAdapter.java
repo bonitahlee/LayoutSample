@@ -12,7 +12,7 @@ import com.example.bonita.filemanager.listener.FileManagerListener;
 import java.util.List;
 
 /**
- * FileItem data를 받아 FileListFragment로 뿌려주는 class
+ * FileListFragment에 사용하는 adapter
  */
 
 public class FileArrayAdapter extends RecyclerView.Adapter<FileInfoViewHolder> {

@@ -14,6 +14,7 @@ import java.util.ListIterator;
 
 /**
  * 파일/폴더 관련 operator를 수행하는 비동기 태스크
+ * // TODO: 2019-12-06 log wrapper 클래스 만든 후 로그 삭제 예정
  */
 public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
     private final String TAG = "FileOperatorTask";
@@ -23,7 +24,7 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
 
     public FileOperatorTask(List<FileItem> itemList, FileManagerListener.TaskListener listener) {
         mItemList = itemList;
-        this.mTaskListener = listener;
+        mTaskListener = listener;
     }
 
     @Override
@@ -33,9 +34,11 @@ public class FileOperatorTask extends AsyncTask<Object, Void, Boolean> {
             // 폴더 열기
             case FileEvent.OPEN_FOLDER:
                 return openFolder((String) params[1]);
+
             // 파일 삭제
             case FileEvent.DELETE_FILE:
                 return deleteFile();
+
             default:
                 return false;
         }

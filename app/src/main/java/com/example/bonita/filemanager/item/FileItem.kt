@@ -4,7 +4,6 @@ import com.example.bonita.filemanager.util.FileUtils
 
 /**
  * 파일에 관한 정보를 담고있는 class (경로, 이름, 수정날짜, 사이즈, image resource id, 폴더 or 파일 여부, 즐겨찾기 선택 여부)
- * // TODO: 2019-12-03 추후에 package 구분 예정
  */
 class FileItem(var filePath: String, var fileName: String, fileDate: Long, fileSize: Long, var isDir: Boolean) {
 

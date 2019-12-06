@@ -47,7 +47,7 @@ public class FileFunction {
     }
 
     /**
-     * 상위/하위 폴더 진입
+     * 상위/하위 폴더 진입 (background에서 진행)
      *
      * @param filePath filePath내로 진입
      */
@@ -57,7 +57,7 @@ public class FileFunction {
     }
 
     /**
-     * 파일/폴더 삭제
+     * 파일/폴더 삭제 (background에서 진행)
      */
     public void deleteFile() {
         Object[] objects = new Object[]{FileEvent.DELETE_FILE, null};

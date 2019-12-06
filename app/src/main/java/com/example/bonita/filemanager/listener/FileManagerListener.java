@@ -3,7 +3,7 @@ package com.example.bonita.filemanager.listener;
 import android.view.View;
 
 /**
- * 이 project에서 쓰이는 listener들을 묶어놓은 클래스
+ * FileManager에서 쓰이는 listener들을 묶어놓은 클래스
  */
 public class FileManagerListener {
 
