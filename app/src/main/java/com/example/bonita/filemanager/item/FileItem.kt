@@ -16,6 +16,6 @@ class FileItem(var filePath: String, var fileName: String, fileDate: Long, fileS
         this.fileDate = FileUtils.getFileDate(fileDate)
         this.fileSize = FileUtils.getFileSize(fileSize)
         this.imageResId = FileUtils.getImageResId(this.fileName, isDir)
-        this.isFavored = false;
+        this.isFavored = false
     }
 }
